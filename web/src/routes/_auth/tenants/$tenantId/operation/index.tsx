@@ -86,7 +86,7 @@ function RouteComponent() {
               type="button"
               onClick={() => {
                 alert(
-                  "#TODO: Add an modal to show a grid of the operations type, where each one is a link and it's content it's his icon (sidebar) and name",
+                  "#TODO: Add an modal to show a grid of the operations type, where each one is a link and it's c  ontent it's his icon (sidebar) and name",
                 );
               }}
             >
