@@ -1,0 +1,12 @@
+# @name CREATE
+
+POST {{API_URL}}/tenants
+Content-Type: application/json
+
+{
+	"name": "Test",
+	"description": "Lorem",
+	"type": "personal"
+}
+
+###

@@ -1,0 +1,13 @@
+###
+# @name GET_ALL
+
+GET {{API_URL}}/operations
+X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+
+###
+# @name GET_ONE
+
+GET {{API_URL}}/operations/db2e4a1f-b074-440e-915e-36f790fcd3f8
+X-Tenant-Id:7493a5a4-d4e3-4198-bc2f-22881febb49a
+
+###

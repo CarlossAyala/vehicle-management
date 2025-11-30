@@ -1,0 +1,27 @@
+name: "vehicle-management"
+
+services:
+  database:
+    image: postgres:17.6
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "f1f86524b1f7a7869c6b1a19d1a15afd"
+      POSTGRES_USER: "carlos_ayala"
+      POSTGRES_DB: "vehicle_management"
+    ports:
+      - "5432:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "carlos_ayala", "-d", "vehicle_management"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+volumes:
+  database-data:

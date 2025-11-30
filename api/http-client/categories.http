@@ -1,0 +1,42 @@
+###
+# @name CREATE
+
+POST {{API_URL}}/categories
+Content-Type: application/json
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+{
+	"name": "Own",
+	"source": "fuel"
+}
+
+###
+# @name GET_ALL
+
+GET {{API_URL}}/categories
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###
+# @name GET_ONE
+
+GET {{API_URL}}/categories/ccb498a5-057e-4471-9a36-4be31aa990ce
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###
+# @name UPDATE
+
+PATCH {{API_URL}}/categories/ccb498a5-057e-4471-9a36-4be31aa990ce
+Content-Type: application/json
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+{
+	"name": "XDD",
+	"source": "fuel"
+}
+###
+# @name REMOVE
+
+DELETE {{API_URL}}/categories/ccb498a5-057e-4471-9a36-4be31aa990ce
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###

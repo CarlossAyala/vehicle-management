@@ -1,0 +1,54 @@
+# @name Create
+
+POST {{API_URL}}/vehicles
+Content-Type: application/json
+X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+
+{
+	"nickname": "XXX",
+	"brand": "Ford",
+	"model": "Ranger",
+	"year": 2005,
+	"licensePlate": "ABC 1234",
+	"type": "car",
+	"status": "available"
+}
+
+###
+
+# @name GetAll
+
+GET {{API_URL}}/vehicles
+X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+
+###
+
+# @name GetOne
+
+GET {{API_URL}}/vehicles/71f1cbce-53b5-4174-b7f4-69c010fd8f29
+X-Tenant-Id: 0d9eaf1e-b315-4410-8d75-bf74d648e6d3
+
+###
+
+# @name Update
+
+PATCH {{API_URL}}/vehicles/e03b4483-b470-4802-b14f-3a58b97d4041
+Content-Type: application/json
+X-Tenant-Id: 0d9eaf1e-b315-4410-8d75-bf74d648e6d3
+
+{
+	"nickname": "Fury",
+	"brand": "Ford",
+	"model": "Ranger",
+	"year": 2026,
+	"licensePlate": "ABC 1234",
+	"type": "car",
+	"status": "available"
+}
+
+###
+
+# @name Delete
+
+DELETE {{API_URL}}/vehicles/e03b4483-b470-4802-b14f-3a58b97d4041
+X-Tenant-Id: 0d9eaf1e-b315-4410-8d75-bf74d648e6d3

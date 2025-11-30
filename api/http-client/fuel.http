@@ -1,0 +1,53 @@
+# @name CREATE
+
+POST {{API_URL}}/fuel
+Content-Type: application/json
+X-Tenant-Id: 72abff1b-4dae-479f-badd-677908051f5b
+
+{
+	"vehicleId": "f0a247ce-1a56-4f87-b351-0eaed11d794f",
+	"fuel": {
+		"quantity": 10,
+		"amount": 6500,
+		"categoryId": "0c755cb6-808e-4c14-9e41-bb311adda3e2"
+	},
+	"odometer": {
+		"value": 20
+	}
+}
+
+###
+# @name GET_ALL
+
+GET {{API_URL}}/fuel?limit=10&order=ASC&page=1&sort=createdAt
+X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+
+###
+# @name GET_ONE
+
+GET {{API_URL}}/fuel/9aba982c-9733-48ce-ae02-3687cbe7b28a
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+####
+# @name UPDATE
+
+PATCH  {{API_URL}}/fuel/0a4767e9-10b5-45a7-8a89-3e9dcac2ca3f
+Content-Type: application/json
+X-Tenant-Id: 0d9eaf1e-b315-4410-8d75-bf74d648e6d3
+
+{
+	"categoryId": "b9416ec3-f18d-4776-be16-64ea9eb8680a",
+	"description": "Edited",
+	"fuel": {
+		"quantity": 99,
+		"amount": 9999
+	}
+}
+
+###
+# @name REMOVE
+
+DELETE {{API_URL}}/fuel/9aba982c-9733-48ce-ae02-3687cbe7b28a
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###

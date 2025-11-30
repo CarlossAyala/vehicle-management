@@ -1,0 +1,23 @@
+{
+  "rest-client.previewOption": "exchange",
+  "rest-client.environmentVariables": {
+    "development": {
+      "API_URL": "http://localhost:3000",
+      "USER_FIRST_NAME": "John",
+      "USER_LAST_NAME": "Doe",
+      "USER_EMAIL": "example@personal.com",
+      "USER_PASSWORD": "super-secure-password",
+      "FLEET_EMAIL": "example@fleet.com",
+      "FLEET_NAME": "Coca-Cola"
+    }
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
+  }
+}

@@ -1,0 +1,38 @@
+# @name Register
+
+POST {{API_URL}}/auth/register
+Content-Type: application/json
+
+{
+	"firstName": "{{USER_FIRST_NAME}}",
+	"lastName": "{{USER_LAST_NAME}}",
+	"email": "{{USER_EMAIL}}",
+	"password": "{{USER_PASSWORD}}"
+}
+
+###
+# @name Login
+
+POST {{API_URL}}/auth/login
+Content-Type: application/json
+
+{
+	"email": "{{USER_EMAIL}}",
+	"password": "{{USER_PASSWORD}}"
+}
+
+###
+# @name Logout
+
+POST {{API_URL}}/auth/logout
+
+###
+# @name Profile
+
+GET {{API_URL}}/auth/profile
+
+
+###
+# @name Tenants
+
+GET {{API_URL}}/auth/tenants

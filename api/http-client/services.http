@@ -1,0 +1,66 @@
+###
+# @name CREATE
+
+POST {{API_URL}}/services
+Content-Type: application/json
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+{
+	"description": "s---",
+	"vehicleId": "480511bb-08f1-471c-aa07-802a050dbc66",
+	"items": [
+		{
+			"description": "Hello",
+			"amount": 5,
+			"categoryId": "010df96b-2504-4e93-abc5-710657991057"
+		},
+		{
+			"description": "Bay",
+			"amount": 10,
+			"categoryId": "97ba534b-8184-413e-a5e2-06835a5afab8"
+		},
+		{
+			"description": "----",
+			"amount": 15,
+			"categoryId": "010df96b-2504-4e93-abc5-710657991057"
+		}
+	]
+}
+
+###
+# @name GET_ONE
+
+GET {{API_URL}}/services/abc17c85-09db-4ce0-bf42-35c13169dcd0
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###
+# @name UPDATE
+
+PATCH {{API_URL}}/services/872d121e-8e9d-44f4-9db5-b9cd12bb4a7e
+Content-Type: application/json
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+{
+	"description": "Updated",
+	"items": [
+		{
+			"id": "ceab6d8c-ead4-418d-a4b7-236ef98b4748",
+			"description": "Hello",
+      "amount": 111,
+      "categoryId": "cc24bf3b-2a85-4965-b5cf-de0d17b2dde5"
+    },
+		{
+      "description": "New",
+      "amount": 999,
+      "categoryId": "010df96b-2504-4e93-abc5-710657991057"
+    }
+	]
+}
+
+###
+# @name REMOVE
+
+DELETE {{API_URL}}/services/872d121e-8e9d-44f4-9db5-b9cd12bb4a7e
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###

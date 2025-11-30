@@ -1,0 +1,43 @@
+###
+# @name CREATE
+
+POST {{API_URL}}/odometers
+Content-Type: application/json
+X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+
+{
+	"vehicleId": "ceeeb773-d88f-4439-8ad2-3c7491dc99a9",
+	"odometer": {
+		"description": "test",
+		"value": 1
+	}
+}
+
+###
+
+# @name GET_ONE
+
+GET {{API_URL}}/odometers/d14b9352-d84f-4dae-89d9-68ca2fba8efa
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+####
+# @name UPDATE
+
+PATCH  {{API_URL}}/odometers/5e7e9c5b-7329-4547-a149-a8d2e2f75ae9
+Content-Type: application/json
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+{
+	"description": "Edited",
+	"odometer": {
+		"value": 100
+	}
+}
+
+###
+# @name GET_ONE
+
+DELETE {{API_URL}}/odometers/b963b630-dca9-4481-b8ca-6e69bbdc4581
+X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+####
