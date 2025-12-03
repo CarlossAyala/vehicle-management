@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  stripSearchParams,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   flexRender,
@@ -8,6 +13,7 @@ import {
   useReactTable,
   type PaginationState,
 } from "@tanstack/react-table";
+import z from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -54,10 +60,18 @@ import {
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/ui/input-group";
 import { Textarea } from "@/ui/textarea";
 
+const searchSchema = z.object({
+  from: z.enum(["operation", "odometer"]).default("odometer").catch("odometer"),
+});
+
 export const Route = createFileRoute(
   "/_auth/tenants/$tenantId/odometer/create",
 )({
   component: RouteComponent,
+  validateSearch: searchSchema,
+  search: {
+    middlewares: [stripSearchParams(searchSchema.parse({}))],
+  },
 });
 
 const fallback: Vehicle[] = [];
@@ -68,6 +82,7 @@ function RouteComponent() {
   });
 
   const { tenantId } = Route.useParams();
+  const search = Route.useSearch();
   const navigate = useNavigate();
 
   const form = useForm<CreateOdometerSchema>({
@@ -118,10 +133,20 @@ function RouteComponent() {
       {
         onSuccess: ({ odometer }) => {
           toast.success("Odometer created successfully");
-          navigate({
-            to: "/tenants/$tenantId/odometer/$odometerId",
-            params: { tenantId, odometerId: odometer.id },
-          });
+
+          switch (search.from) {
+            case "operation":
+              navigate({
+                to: "/tenants/$tenantId/operation",
+                params: { tenantId },
+              });
+              break;
+            default:
+              navigate({
+                to: "/tenants/$tenantId/odometer/$odometerId",
+                params: { tenantId, odometerId: odometer.id },
+              });
+          }
         },
         onError: () => {
           toast.error("Failed to create odometer");
@@ -409,7 +434,11 @@ function RouteComponent() {
             </Button>
             <Button variant="secondary" type="button" asChild>
               <Link
-                to="/tenants/$tenantId/odometer"
+                to={
+                  search.from === "operation"
+                    ? "/tenants/$tenantId/operation"
+                    : "/tenants/$tenantId/odometer"
+                }
                 params={{
                   tenantId,
                 }}

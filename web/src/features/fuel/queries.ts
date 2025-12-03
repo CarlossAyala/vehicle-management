@@ -59,16 +59,29 @@ export const useCreateFuel = () => {
         operationKeys.detail(tenantId, operation.id),
         operation,
       );
+
+      const promises = [
+        query.invalidateQueries({
+          queryKey: operationKeys.lists(tenantId),
+        }),
+        query.invalidateQueries({
+          queryKey: fuelKeys.lists(tenantId),
+        }),
+      ];
+
       if (odometer) {
         query.setQueryData(
           odometerKeys.operation(tenantId, operation.id),
           odometer,
         );
+        promises.push(
+          query.invalidateQueries({
+            queryKey: odometerKeys.lists(tenantId),
+          }),
+        );
       }
 
-      return query.invalidateQueries({
-        queryKey: fuelKeys.lists(tenantId),
-      });
+      return Promise.all(promises);
     },
   });
 };

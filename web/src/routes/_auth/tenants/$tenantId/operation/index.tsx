@@ -1,15 +1,25 @@
 import { useMemo } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, linkOptions } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
+import { FuelIcon, NavigationIcon } from "lucide-react";
 import { operationsQuery } from "@/features/operation/queries";
 import type { Operation } from "@/features/operation/types";
 import { VehicleCell } from "@/features/vehicle/components/vehicle-cell";
 import { UserCell } from "@/features/user/components/user-cell";
 import { OperationTypeCell } from "@/features/operation/components/operation-type-cell";
 import { Page, PageContent, PageHeader, PageTitle } from "@/components/page";
-import { Button } from "@/ui/button";
 import { DataTable } from "@/components/data-table";
+import { Button } from "@/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
 
 export const Route = createFileRoute("/_auth/tenants/$tenantId/operation/")({
   component: RouteComponent,
@@ -45,8 +55,8 @@ function RouteComponent() {
         },
       },
       {
-        accessorKey: "id",
-        header: "Source",
+        accessorKey: "type",
+        header: "Type",
         cell: (props) => {
           const { id } = props.row.original;
 
@@ -79,19 +89,61 @@ function RouteComponent() {
       <PageHeader>
         <div className="grid grid-cols-8 items-center">
           <PageTitle className="col-span-6 mb-0">
-            <h2>Odometer List</h2>
+            <h2>Operation List</h2>
           </PageTitle>
           <div className="col-span-2 flex justify-end">
-            <Button
-              type="button"
-              onClick={() => {
-                alert(
-                  "#TODO: Add an modal to show a grid of the operations type, where each one is a link and it's c  ontent it's his icon (sidebar) and name",
-                );
-              }}
-            >
-              Add new
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button type="button">Add new</Button>
+              </DialogTrigger>
+              <DialogContent className="gap-6">
+                <DialogHeader>
+                  <DialogTitle>Choose an operation type</DialogTitle>
+                  <DialogDescription>
+                    Start by selecting the type of operation you want to create.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    {
+                      label: "Fuel",
+                      link: linkOptions({
+                        to: "/tenants/$tenantId/fuel/create",
+                        params: { tenantId },
+                        search: {
+                          from: "operation",
+                        },
+                      }),
+                      icon: FuelIcon,
+                    },
+                    {
+                      label: "Odometer",
+                      link: linkOptions({
+                        to: "/tenants/$tenantId/odometer/create",
+                        params: { tenantId },
+                        search: {
+                          from: "operation",
+                        },
+                      }),
+                      icon: NavigationIcon,
+                    },
+                  ].map((item) => (
+                    <Link {...item.link} className="rounded-xl">
+                      <Card className="hover:bg-card/80 gap-2">
+                        <CardHeader>
+                          <item.icon className="size-10 stroke-1" />
+                        </CardHeader>
+                        <CardContent>
+                          <CardTitle className="font-normal">
+                            {item.label}
+                          </CardTitle>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </PageHeader>

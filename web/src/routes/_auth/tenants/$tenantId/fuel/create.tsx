@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  stripSearchParams,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +15,7 @@ import {
   useReactTable,
   type PaginationState,
 } from "@tanstack/react-table";
+import z from "zod";
 import { toast } from "sonner";
 import {
   ChevronLeftIcon,
@@ -60,8 +66,16 @@ import {
 import { Label } from "@/ui/label";
 import { Item, ItemActions, ItemContent, ItemTitle } from "@/ui/item";
 
+const searchSchema = z.object({
+  from: z.enum(["operation", "fuel"]).default("fuel").catch("fuel"),
+});
+
 export const Route = createFileRoute("/_auth/tenants/$tenantId/fuel/create")({
   component: RouteComponent,
+  validateSearch: searchSchema,
+  search: {
+    middlewares: [stripSearchParams(searchSchema.parse({}))],
+  },
 });
 
 const fallback: Vehicle[] = [];
@@ -71,6 +85,7 @@ function RouteComponent() {
     pageSize: 10,
   });
 
+  const search = Route.useSearch();
   const { tenantId } = Route.useParams();
   const navigate = useNavigate();
 
@@ -131,13 +146,23 @@ function RouteComponent() {
       {
         onSuccess: ({ fuel }) => {
           toast.success("Fuel created successfully");
-          navigate({
-            to: "/tenants/$tenantId/fuel/$fuelId",
-            params: {
-              tenantId,
-              fuelId: fuel.id,
-            },
-          });
+
+          switch (search.from) {
+            case "operation":
+              navigate({
+                to: "/tenants/$tenantId/operation",
+                params: { tenantId },
+              });
+              break;
+            default:
+              navigate({
+                to: "/tenants/$tenantId/fuel/$fuelId",
+                params: {
+                  tenantId,
+                  fuelId: fuel.id,
+                },
+              });
+          }
         },
         onError: () => {
           toast.error("Failed to create fuel");
@@ -566,7 +591,11 @@ function RouteComponent() {
             </Button>
             <Button variant="secondary" type="button" asChild>
               <Link
-                to="/tenants/$tenantId/fuel"
+                to={
+                  search.from === "operation"
+                    ? "/tenants/$tenantId/operation"
+                    : "/tenants/$tenantId/fuel"
+                }
                 params={{
                   tenantId,
                 }}
