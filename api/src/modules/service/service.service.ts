@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
+import { PaginationService } from "src/common/pagination/pagination.service";
 import { Tenant } from "../tenants/entities/tenant.entity";
 import { User } from "../user/entities/user.entity";
 import { Operation } from "../operation/entities/operation.entity";
@@ -15,6 +16,8 @@ import { ServiceItem } from "./entities/service-item.entity";
 import { Service } from "./entities/service.entity";
 import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
+import { ServiceFiltersDto } from "./dto/service-filters.dto";
+import { Pagination } from "src/common/pagination/pagination.interface";
 
 @Injectable()
 export class ServiceService {
@@ -25,6 +28,7 @@ export class ServiceService {
     private readonly itemRepository: Repository<ServiceItem>,
     private readonly dataSource: DataSource,
     private readonly operationService: OperationService,
+    private readonly paginationService: PaginationService,
   ) {}
 
   async create(
@@ -69,19 +73,51 @@ export class ServiceService {
     return result;
   }
 
+  async findAll(
+    tenantId: Tenant["id"],
+    filters: ServiceFiltersDto,
+  ): Promise<Pagination<Service>> {
+    const qb = this.dataSource.manager
+      .createQueryBuilder(Service, "service")
+      .leftJoinAndSelect("service.items", "items")
+      .innerJoin("service.operation", "operation")
+      .where("operation.tenantId = :tenantId", { tenantId })
+      .orderBy("service.createdAt", "DESC");
+
+    return this.paginationService.paginate(qb, filters);
+  }
+
   async findOne(
     tenantId: Tenant["id"],
     id: Service["id"],
-  ): Promise<{
-    service: Service;
-    items: ServiceItem[];
-  }> {
+  ): Promise<
+    Service & {
+      items: ServiceItem[];
+    }
+  > {
     const { service } = await this.checkOwnership(tenantId, id);
 
-    const items = await this.itemRepository.findBy({ serviceId: service.id });
+    const items = await this.itemRepository.findBy({
+      serviceId: service.id,
+    });
 
-    return { service, items };
+    Object.assign(service, { items });
+
+    return service;
   }
+
+  // async findItems(
+  //   tenantId: Tenant["id"],
+  //   id: Service["id"],
+  // ): Promise<ServiceItem[]> {
+  //   const { service } = await this.checkOwnership(tenantId, id);
+
+  //   const items = await this.itemRepository.findBy({
+  //     serviceId: service.id,
+  //   });
+
+  //   return items;
+  // }
 
   async update(
     tenantId: Tenant["id"],

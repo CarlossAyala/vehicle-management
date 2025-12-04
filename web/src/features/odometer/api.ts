@@ -1,6 +1,9 @@
 import qs from "query-string";
 import type { QueryFunctionContext } from "@tanstack/react-query";
 import { API_URL, AUTH_HEADER_TENANT_ID_NAME } from "@/lib/utils";
+import type { Pagination } from "@/lib/filters";
+import { QUERY_STRING_OPTIONS } from "@/lib/query-string";
+import type { Operation } from "../operation/types";
 import type {
   CreateOdometerProps,
   Odometer,
@@ -8,10 +11,7 @@ import type {
   RemoveOdometerProps,
   UpdateOdometerProps,
 } from "./types";
-import type { Pagination } from "@/lib/filters";
-import { QUERY_STRING_OPTIONS } from "@/lib/query-string";
 import type { odometerKeys } from "./queries";
-import type { Operation } from "../operation/types";
 
 export const create = async ({
   tenantId,
