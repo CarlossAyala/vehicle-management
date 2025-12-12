@@ -41,8 +41,24 @@ export const OperationTypeCell = ({ tenantId, operationId }: Props) => {
             tenantId,
             odometerId: data.entity.id,
           }}
+          search={
+            {
+              // from
+            }
+          }
         >
           Odometer
+        </Link>
+      ) : data.operation.type === "service" ? (
+        <Link
+          to="/tenants/$tenantId/service/$serviceId"
+          params={{
+            tenantId,
+            serviceId: data.entity.id,
+          }}
+          search={{}}
+        >
+          Service
         </Link>
       ) : (
         // "#TODO: add others operation types

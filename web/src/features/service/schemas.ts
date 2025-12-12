@@ -6,6 +6,7 @@ const service = z.object({
 });
 
 const item = z.object({
+  id: z.string().optional(),
   amount: z.number().int().nonnegative(),
   description: z.string(),
   categoryId: z.string().min(1, "Category is required"),
@@ -20,9 +21,10 @@ export const createServiceSchema = createOperationSchema.extend({
 export const updateServiceSchema = createOperationSchema
   .extend({
     service,
+    items,
   })
   .omit({
     vehicleId: true,
   })
   .partial();
-export const serviceItemSchema = item;
+// export const serviceItemSchema = item;

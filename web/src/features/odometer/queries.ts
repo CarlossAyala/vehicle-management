@@ -58,7 +58,7 @@ export const odometerQuery = (tenantId: Tenant["id"], id: Odometer["id"]) => {
   });
 };
 
-export const odometerByOperationQuery = (
+export const odometerOperationQuery = (
   tenantId: Tenant["id"],
   id: Operation["id"],
 ) => {

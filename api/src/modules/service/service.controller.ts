@@ -6,8 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  HttpCode,
-  HttpStatus,
   Query,
 } from "@nestjs/common";
 import { Permissions } from "src/common/permissions/permissions.decorator";
@@ -17,8 +15,8 @@ import { AuthData } from "../auth/auth.interface";
 import { Service } from "./entities/service.entity";
 import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
-import { ServiceService } from "./service.service";
 import { ServiceFiltersDto } from "./dto/service-filters.dto";
+import { ServiceService } from "./service.service";
 
 @Controller("services")
 export class ServiceController {
@@ -45,15 +43,6 @@ export class ServiceController {
     return this.service.findOne(auth.tenantId!, id);
   }
 
-  // @Permissions("SERVICE", "READ")
-  // @Get(":id/items")
-  // findItems(
-  //   @GetAuth() auth: AuthData,
-  //   @Param("id", UUIDParamPipe) id: Service["id"],
-  // ) {
-  //   return this.service.findItems(auth.tenantId!, id);
-  // }
-
   @Permissions("SERVICE", "UPDATE")
   @Patch(":id")
   update(
@@ -64,7 +53,6 @@ export class ServiceController {
     return this.service.update(auth.tenantId!, id, dto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Permissions("SERVICE", "DELETE")
   @Delete(":id")
   remove(

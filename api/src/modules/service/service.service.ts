@@ -106,33 +106,18 @@ export class ServiceService {
     return service;
   }
 
-  // async findItems(
-  //   tenantId: Tenant["id"],
-  //   id: Service["id"],
-  // ): Promise<ServiceItem[]> {
-  //   const { service } = await this.checkOwnership(tenantId, id);
-
-  //   const items = await this.itemRepository.findBy({
-  //     serviceId: service.id,
-  //   });
-
-  //   return items;
-  // }
-
   async update(
     tenantId: Tenant["id"],
     id: Service["id"],
-    { items: itemsDto, ...operationDto }: UpdateServiceDto,
+    { service: serviceDto, items: itemsDto, ...operationDto }: UpdateServiceDto,
   ): Promise<{
     operation: Operation;
     service: Service;
     items: ServiceItem[];
     odometer?: Odometer;
   }> {
-    const { operation: _operation, service } = await this.checkOwnership(
-      tenantId,
-      id,
-    );
+    const { operation: _operation, service: _service } =
+      await this.checkOwnership(tenantId, id);
 
     const result = await this.dataSource.transaction(async (manager) => {
       const { operation, odometer } = await this.operationService.update(
@@ -146,8 +131,15 @@ export class ServiceService {
         },
       );
 
+      const service = await manager.save(
+        manager.create(Service, {
+          ..._service,
+          ...serviceDto,
+        }),
+      );
+
       const __items = await this.itemRepository.findBy({
-        serviceId: service.id,
+        serviceId: id,
       });
 
       const itemsWithId = itemsDto.filter((i) => i.id);
@@ -164,10 +156,12 @@ export class ServiceService {
       );
       const itemsToCreate = itemsDto.filter((i) => !i.id);
 
-      await manager.delete(
-        ServiceItem,
-        itemsToRemove.map((i) => i.id),
-      );
+      if (itemsToRemove.length) {
+        await manager.delete(
+          ServiceItem,
+          itemsToRemove.map((i) => i.id),
+        );
+      }
 
       const _itemsToUpdate = itemsToUpdate.map((item) => {
         Object.assign(
@@ -181,7 +175,7 @@ export class ServiceService {
       const _itemsToCreate = itemsToCreate.map((item) =>
         manager.create(ServiceItem, {
           ...item,
-          serviceId: service.id,
+          serviceId: id,
         }),
       );
       const itemsToCreateResult = await manager.save(_itemsToCreate);
@@ -189,7 +183,11 @@ export class ServiceService {
       return {
         operation,
         service,
-        items: itemsToUpdateResult.concat(itemsToCreateResult),
+        items: __items
+          .filter((i) => itemsToRemove.find((j) => j.id !== i.id))
+          .filter((i) => itemsToUpdate.find((j) => j.id === i.id))
+          .concat(itemsToCreateResult)
+          .concat(itemsToUpdateResult),
         odometer,
       };
     });
@@ -197,10 +195,27 @@ export class ServiceService {
     return result;
   }
 
-  async remove(tenantId: Tenant["id"], id: Service["id"]): Promise<void> {
-    const { operation } = await this.checkOwnership(tenantId, id);
+  async remove(
+    tenantId: Tenant["id"],
+    id: Service["id"],
+  ): Promise<{
+    operationId: Operation["id"];
+    id: Service["id"];
+    odometerId?: Odometer["id"];
+  }> {
+    const { operation, service } = await this.checkOwnership(tenantId, id);
+
+    const odometer = await this.dataSource.getRepository(Odometer).findOneBy({
+      operationId: operation.id,
+    });
 
     await this.operationService.remove(operation.id);
+
+    return {
+      operationId: operation.id,
+      id: service.id,
+      odometerId: odometer?.id,
+    };
   }
 
   async checkOwnership(

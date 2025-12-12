@@ -22,6 +22,7 @@ import { UpdateOperationDto } from "./dto/update-operation.dto";
 import { OperationFiltersDto } from "./dto/operation-filters.dto";
 import { OperationType } from "./operation.interface";
 import { Fuel } from "../fuel/entities/fuel.entity";
+import { Service } from "../service/entities/service.entity";
 
 @Injectable()
 export class OperationService {
@@ -113,7 +114,7 @@ export class OperationService {
     id: Operation["id"],
   ): Promise<{
     operation: Operation;
-    entity: Odometer | Fuel;
+    entity: Odometer | Fuel | Service;
   }> {
     const operation = await this.checkOwnership(tenantId, id);
 
@@ -137,6 +138,16 @@ export class OperationService {
         }
 
         return { operation, entity: odometer };
+      }
+      case OperationType.SERVICE: {
+        const service = await this.dataSource
+          .getRepository(Service)
+          .findOneBy({ operationId: id });
+        if (!service) {
+          throw new NotFoundException("Service entity not found");
+        }
+
+        return { operation, entity: service };
       }
 
       default:

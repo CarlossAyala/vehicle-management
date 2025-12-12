@@ -1,11 +1,7 @@
 import type z from "zod";
 import type { Category } from "../category/types";
 import type { Operation } from "../operation/types";
-import type {
-  createServiceSchema,
-  serviceItemSchema,
-  updateServiceSchema,
-} from "./schemas";
+import type { createServiceSchema, updateServiceSchema } from "./schemas";
 
 export interface Service {
   id: string;
@@ -27,4 +23,3 @@ export interface ServiceItem {
 
 export type CreateServiceSchema = z.infer<typeof createServiceSchema>;
 export type UpdateServiceSchema = z.infer<typeof updateServiceSchema>;
-export type ServiceItemSchema = z.infer<typeof serviceItemSchema>;

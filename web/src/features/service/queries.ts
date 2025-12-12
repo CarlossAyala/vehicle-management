@@ -7,16 +7,7 @@ import type { Tenant } from "../tenant/types";
 import { operationKeys } from "../operation/queries";
 import { odometerKeys } from "../odometer/queries";
 import type { Service } from "./types";
-import {
-  create,
-  createItem,
-  getAll,
-  getOne,
-  remove,
-  removeItem,
-  update,
-  updateItem,
-} from "./api";
+import { create, getAll, getOne, remove, update } from "./api";
 
 // TODO: add filters
 export const serviceKeys = {
@@ -61,10 +52,9 @@ export const useCreateService = () => {
         operationKeys.detail(tenantId, operation.id),
         operation,
       );
-      query.setQueryData(serviceKeys.detail(tenantId, service.id), {
-        service,
-        items,
-      });
+
+      Object.assign(service, { items });
+      query.setQueryData(serviceKeys.detail(tenantId, service.id), service);
 
       const promises = [
         query.invalidateQueries({
@@ -93,30 +83,12 @@ export const useCreateService = () => {
   });
 };
 
-export const useCreateServiceItem = () => {
-  const query = useQueryClient();
-
-  return useMutation({
-    mutationFn: createItem,
-    onSuccess: (item, { tenantId, id }) => {
-      query.setQueryData(serviceQuery(tenantId, id).queryKey, (old) => {
-        if (!old) return;
-
-        return {
-          ...old,
-          items: [...old.items, item],
-        };
-      });
-    },
-  });
-};
-
 export const useUpdateService = () => {
   const query = useQueryClient();
 
   return useMutation({
     mutationFn: update,
-    onSuccess: ({ operation, service, odometer }, { tenantId }) => {
+    onSuccess: ({ operation, service, items, odometer }, { tenantId }) => {
       query.setQueryData(
         operationKeys.detail(tenantId, operation.id),
         operation,
@@ -124,6 +96,7 @@ export const useUpdateService = () => {
       query.setQueryData(serviceQuery(tenantId, service.id).queryKey, (old) => {
         if (!old) return;
 
+        Object.assign(service, { items });
         return {
           ...old,
           ...service,
@@ -152,33 +125,6 @@ export const useUpdateService = () => {
       }
 
       return Promise.all(promises);
-    },
-  });
-};
-
-export const useUpdateServiceItem = () => {
-  const query = useQueryClient();
-
-  return useMutation({
-    mutationFn: updateItem,
-    onSuccess: (item, { tenantId, id, itemId }) => {
-      query.setQueryData(serviceQuery(tenantId, id).queryKey, (old) => {
-        if (!old) return;
-
-        return {
-          ...old,
-          items: old.items.map((i) => {
-            if (i.id === itemId) {
-              return item;
-            }
-
-            return i;
-          }),
-        };
-      });
-
-      // TODO: Check if in service table, the total get the update
-      // otherwise, we will need to invalidated
     },
   });
 };
@@ -217,26 +163,6 @@ export const useRemoveService = () => {
       }
 
       return Promise.all(promises);
-    },
-  });
-};
-
-export const useRemoveServiceItem = () => {
-  const query = useQueryClient();
-
-  return useMutation({
-    mutationFn: removeItem,
-    onSuccess: (_, { tenantId, id, itemId }) => {
-      query.setQueryData(serviceQuery(tenantId, id).queryKey, (old) => {
-        if (!old) return;
-
-        return {
-          ...old,
-          items: old.items.filter((i) => i.id !== itemId),
-        };
-      });
-
-      // TODO: check useUpdateServiceItem
     },
   });
 };

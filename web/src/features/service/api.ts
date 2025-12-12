@@ -10,7 +10,6 @@ import type {
   CreateServiceSchema,
   Service,
   ServiceItem,
-  ServiceItemSchema,
   UpdateServiceSchema,
 } from "./types";
 import type { serviceKeys } from "./queries";
@@ -39,32 +38,6 @@ export const create = async ({
 
   if (!res.ok) {
     throw new Error("Failed to create service");
-  }
-
-  return res.json();
-};
-
-export const createItem = async ({
-  tenantId,
-  id,
-  values,
-}: {
-  tenantId: Tenant["id"];
-  id: Service["id"];
-  values: ServiceItemSchema;
-}): Promise<ServiceItem> => {
-  const res = await fetch(`${API_URL}/services/${id}/items`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
-    },
-    body: JSON.stringify(values),
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to create service item");
   }
 
   return res.json();
@@ -151,34 +124,6 @@ export const update = async ({
   return res.json();
 };
 
-export const updateItem = async ({
-  tenantId,
-  id,
-  itemId,
-  values,
-}: {
-  tenantId: Tenant["id"];
-  id: Service["id"];
-  itemId: ServiceItem["id"];
-  values: ServiceItemSchema;
-}): Promise<ServiceItem> => {
-  const res = await fetch(`${API_URL}/services/${id}/items/${itemId}`, {
-    method: "PATCH",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
-    },
-    body: JSON.stringify(values),
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to update service item");
-  }
-
-  return res.json();
-};
-
 export const remove = async ({
   tenantId,
   id,
@@ -203,26 +148,4 @@ export const remove = async ({
   }
 
   return res.json();
-};
-
-export const removeItem = async ({
-  tenantId,
-  id,
-  itemId,
-}: {
-  tenantId: Tenant["id"];
-  id: Service["id"];
-  itemId: ServiceItem["id"];
-}): Promise<void> => {
-  const res = await fetch(`${API_URL}/services/${id}/items/${itemId}`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to delete service item");
-  }
 };
