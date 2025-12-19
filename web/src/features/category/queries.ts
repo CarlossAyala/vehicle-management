@@ -2,7 +2,7 @@ import { queryOptions, skipToken } from "@tanstack/react-query";
 import type { Tenant } from "../tenant/types";
 import type { Category } from "./types";
 import { getAll, getOne } from "./api";
-import { OperationTypes } from "../operation/types";
+import { OperationTypes, type OperationType } from "../operation/types";
 
 export const categoryKeys = {
   key: (tenantId: Tenant["id"]) => {
@@ -34,10 +34,18 @@ export const fuelCategoriesQuery = (tenantId: Tenant["id"]) => {
   });
 };
 
-export const categoriesQuery = (tenantId: Tenant["id"]) => {
+export const categoriesQuery = (
+  tenantId: Tenant["id"],
+  type?: OperationType,
+) => {
   return queryOptions({
     queryKey: categoryKeys.list(tenantId),
     queryFn: getAll,
+    select: (categories) => {
+      if (!type) return categories;
+
+      return categories.filter((category) => category.source === type);
+    },
   });
 };
 

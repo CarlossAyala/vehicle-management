@@ -6,6 +6,7 @@ import {
   ListTreeIcon,
   NavigationIcon,
   UserIcon,
+  WrenchIcon,
 } from "lucide-react";
 import type { RouteItem } from "@/lib/utils";
 import type { Tenant } from "./types";
@@ -68,6 +69,14 @@ export const getTenantItems = (tenantId: string): RouteItem[] => [
       tenantId,
     },
     icon: ListTreeIcon,
+  },
+  {
+    title: "Services",
+    to: "/tenants/$tenantId/service",
+    params: {
+      tenantId,
+    },
+    icon: WrenchIcon,
   },
 ];
 

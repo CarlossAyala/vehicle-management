@@ -20,10 +20,13 @@ import { Route as AuthOnboardingInvitationRouteImport } from './routes/_auth/onb
 import { Route as AuthOnboardingCreateTenantRouteImport } from './routes/_auth/onboarding/create-tenant'
 import { Route as AuthTenantsTenantIdIndexRouteImport } from './routes/_auth/tenants/$tenantId/index'
 import { Route as AuthTenantsTenantIdVehiclesIndexRouteImport } from './routes/_auth/tenants/$tenantId/vehicles/index'
+import { Route as AuthTenantsTenantIdServiceIndexRouteImport } from './routes/_auth/tenants/$tenantId/service/index'
 import { Route as AuthTenantsTenantIdOperationIndexRouteImport } from './routes/_auth/tenants/$tenantId/operation/index'
 import { Route as AuthTenantsTenantIdOdometerIndexRouteImport } from './routes/_auth/tenants/$tenantId/odometer/index'
 import { Route as AuthTenantsTenantIdFuelIndexRouteImport } from './routes/_auth/tenants/$tenantId/fuel/index'
 import { Route as AuthTenantsTenantIdVehiclesCreateRouteImport } from './routes/_auth/tenants/$tenantId/vehicles/create'
+import { Route as AuthTenantsTenantIdServiceCreateRouteImport } from './routes/_auth/tenants/$tenantId/service/create'
+import { Route as AuthTenantsTenantIdServiceServiceIdRouteImport } from './routes/_auth/tenants/$tenantId/service/$serviceId'
 import { Route as AuthTenantsTenantIdOdometerCreateRouteImport } from './routes/_auth/tenants/$tenantId/odometer/create'
 import { Route as AuthTenantsTenantIdOdometerOdometerIdRouteImport } from './routes/_auth/tenants/$tenantId/odometer/$odometerId'
 import { Route as AuthTenantsTenantIdFuelCreateRouteImport } from './routes/_auth/tenants/$tenantId/fuel/create'
@@ -88,6 +91,12 @@ const AuthTenantsTenantIdVehiclesIndexRoute =
     path: '/tenants/$tenantId/vehicles/',
     getParentRoute: () => AuthRoute,
   } as any)
+const AuthTenantsTenantIdServiceIndexRoute =
+  AuthTenantsTenantIdServiceIndexRouteImport.update({
+    id: '/tenants/$tenantId/service/',
+    path: '/tenants/$tenantId/service/',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const AuthTenantsTenantIdOperationIndexRoute =
   AuthTenantsTenantIdOperationIndexRouteImport.update({
     id: '/tenants/$tenantId/operation/',
@@ -110,6 +119,18 @@ const AuthTenantsTenantIdVehiclesCreateRoute =
   AuthTenantsTenantIdVehiclesCreateRouteImport.update({
     id: '/tenants/$tenantId/vehicles/create',
     path: '/tenants/$tenantId/vehicles/create',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthTenantsTenantIdServiceCreateRoute =
+  AuthTenantsTenantIdServiceCreateRouteImport.update({
+    id: '/tenants/$tenantId/service/create',
+    path: '/tenants/$tenantId/service/create',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthTenantsTenantIdServiceServiceIdRoute =
+  AuthTenantsTenantIdServiceServiceIdRouteImport.update({
+    id: '/tenants/$tenantId/service/$serviceId',
+    path: '/tenants/$tenantId/service/$serviceId',
     getParentRoute: () => AuthRoute,
   } as any)
 const AuthTenantsTenantIdOdometerCreateRoute =
@@ -156,10 +177,13 @@ export interface FileRoutesByFullPath {
   '/tenants/$tenantId/fuel/create': typeof AuthTenantsTenantIdFuelCreateRoute
   '/tenants/$tenantId/odometer/$odometerId': typeof AuthTenantsTenantIdOdometerOdometerIdRoute
   '/tenants/$tenantId/odometer/create': typeof AuthTenantsTenantIdOdometerCreateRoute
+  '/tenants/$tenantId/service/$serviceId': typeof AuthTenantsTenantIdServiceServiceIdRoute
+  '/tenants/$tenantId/service/create': typeof AuthTenantsTenantIdServiceCreateRoute
   '/tenants/$tenantId/vehicles/create': typeof AuthTenantsTenantIdVehiclesCreateRoute
   '/tenants/$tenantId/fuel': typeof AuthTenantsTenantIdFuelIndexRoute
   '/tenants/$tenantId/odometer': typeof AuthTenantsTenantIdOdometerIndexRoute
   '/tenants/$tenantId/operation': typeof AuthTenantsTenantIdOperationIndexRoute
+  '/tenants/$tenantId/service': typeof AuthTenantsTenantIdServiceIndexRoute
   '/tenants/$tenantId/vehicles': typeof AuthTenantsTenantIdVehiclesIndexRoute
   '/tenants/$tenantId/vehicles/$vehicleId': typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRoute
 }
@@ -176,10 +200,13 @@ export interface FileRoutesByTo {
   '/tenants/$tenantId/fuel/create': typeof AuthTenantsTenantIdFuelCreateRoute
   '/tenants/$tenantId/odometer/$odometerId': typeof AuthTenantsTenantIdOdometerOdometerIdRoute
   '/tenants/$tenantId/odometer/create': typeof AuthTenantsTenantIdOdometerCreateRoute
+  '/tenants/$tenantId/service/$serviceId': typeof AuthTenantsTenantIdServiceServiceIdRoute
+  '/tenants/$tenantId/service/create': typeof AuthTenantsTenantIdServiceCreateRoute
   '/tenants/$tenantId/vehicles/create': typeof AuthTenantsTenantIdVehiclesCreateRoute
   '/tenants/$tenantId/fuel': typeof AuthTenantsTenantIdFuelIndexRoute
   '/tenants/$tenantId/odometer': typeof AuthTenantsTenantIdOdometerIndexRoute
   '/tenants/$tenantId/operation': typeof AuthTenantsTenantIdOperationIndexRoute
+  '/tenants/$tenantId/service': typeof AuthTenantsTenantIdServiceIndexRoute
   '/tenants/$tenantId/vehicles': typeof AuthTenantsTenantIdVehiclesIndexRoute
   '/tenants/$tenantId/vehicles/$vehicleId': typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRoute
 }
@@ -199,10 +226,13 @@ export interface FileRoutesById {
   '/_auth/tenants/$tenantId/fuel/create': typeof AuthTenantsTenantIdFuelCreateRoute
   '/_auth/tenants/$tenantId/odometer/$odometerId': typeof AuthTenantsTenantIdOdometerOdometerIdRoute
   '/_auth/tenants/$tenantId/odometer/create': typeof AuthTenantsTenantIdOdometerCreateRoute
+  '/_auth/tenants/$tenantId/service/$serviceId': typeof AuthTenantsTenantIdServiceServiceIdRoute
+  '/_auth/tenants/$tenantId/service/create': typeof AuthTenantsTenantIdServiceCreateRoute
   '/_auth/tenants/$tenantId/vehicles/create': typeof AuthTenantsTenantIdVehiclesCreateRoute
   '/_auth/tenants/$tenantId/fuel/': typeof AuthTenantsTenantIdFuelIndexRoute
   '/_auth/tenants/$tenantId/odometer/': typeof AuthTenantsTenantIdOdometerIndexRoute
   '/_auth/tenants/$tenantId/operation/': typeof AuthTenantsTenantIdOperationIndexRoute
+  '/_auth/tenants/$tenantId/service/': typeof AuthTenantsTenantIdServiceIndexRoute
   '/_auth/tenants/$tenantId/vehicles/': typeof AuthTenantsTenantIdVehiclesIndexRoute
   '/_auth/tenants/$tenantId/vehicles/$vehicleId/': typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRoute
 }
@@ -221,10 +251,13 @@ export interface FileRouteTypes {
     | '/tenants/$tenantId/fuel/create'
     | '/tenants/$tenantId/odometer/$odometerId'
     | '/tenants/$tenantId/odometer/create'
+    | '/tenants/$tenantId/service/$serviceId'
+    | '/tenants/$tenantId/service/create'
     | '/tenants/$tenantId/vehicles/create'
     | '/tenants/$tenantId/fuel'
     | '/tenants/$tenantId/odometer'
     | '/tenants/$tenantId/operation'
+    | '/tenants/$tenantId/service'
     | '/tenants/$tenantId/vehicles'
     | '/tenants/$tenantId/vehicles/$vehicleId'
   fileRoutesByTo: FileRoutesByTo
@@ -241,10 +274,13 @@ export interface FileRouteTypes {
     | '/tenants/$tenantId/fuel/create'
     | '/tenants/$tenantId/odometer/$odometerId'
     | '/tenants/$tenantId/odometer/create'
+    | '/tenants/$tenantId/service/$serviceId'
+    | '/tenants/$tenantId/service/create'
     | '/tenants/$tenantId/vehicles/create'
     | '/tenants/$tenantId/fuel'
     | '/tenants/$tenantId/odometer'
     | '/tenants/$tenantId/operation'
+    | '/tenants/$tenantId/service'
     | '/tenants/$tenantId/vehicles'
     | '/tenants/$tenantId/vehicles/$vehicleId'
   id:
@@ -263,10 +299,13 @@ export interface FileRouteTypes {
     | '/_auth/tenants/$tenantId/fuel/create'
     | '/_auth/tenants/$tenantId/odometer/$odometerId'
     | '/_auth/tenants/$tenantId/odometer/create'
+    | '/_auth/tenants/$tenantId/service/$serviceId'
+    | '/_auth/tenants/$tenantId/service/create'
     | '/_auth/tenants/$tenantId/vehicles/create'
     | '/_auth/tenants/$tenantId/fuel/'
     | '/_auth/tenants/$tenantId/odometer/'
     | '/_auth/tenants/$tenantId/operation/'
+    | '/_auth/tenants/$tenantId/service/'
     | '/_auth/tenants/$tenantId/vehicles/'
     | '/_auth/tenants/$tenantId/vehicles/$vehicleId/'
   fileRoutesById: FileRoutesById
@@ -355,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTenantsTenantIdVehiclesIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/tenants/$tenantId/service/': {
+      id: '/_auth/tenants/$tenantId/service/'
+      path: '/tenants/$tenantId/service'
+      fullPath: '/tenants/$tenantId/service'
+      preLoaderRoute: typeof AuthTenantsTenantIdServiceIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/tenants/$tenantId/operation/': {
       id: '/_auth/tenants/$tenantId/operation/'
       path: '/tenants/$tenantId/operation'
@@ -381,6 +427,20 @@ declare module '@tanstack/react-router' {
       path: '/tenants/$tenantId/vehicles/create'
       fullPath: '/tenants/$tenantId/vehicles/create'
       preLoaderRoute: typeof AuthTenantsTenantIdVehiclesCreateRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/tenants/$tenantId/service/create': {
+      id: '/_auth/tenants/$tenantId/service/create'
+      path: '/tenants/$tenantId/service/create'
+      fullPath: '/tenants/$tenantId/service/create'
+      preLoaderRoute: typeof AuthTenantsTenantIdServiceCreateRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/tenants/$tenantId/service/$serviceId': {
+      id: '/_auth/tenants/$tenantId/service/$serviceId'
+      path: '/tenants/$tenantId/service/$serviceId'
+      fullPath: '/tenants/$tenantId/service/$serviceId'
+      preLoaderRoute: typeof AuthTenantsTenantIdServiceServiceIdRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/tenants/$tenantId/odometer/create': {
@@ -432,10 +492,13 @@ interface AuthRouteChildren {
   AuthTenantsTenantIdFuelCreateRoute: typeof AuthTenantsTenantIdFuelCreateRoute
   AuthTenantsTenantIdOdometerOdometerIdRoute: typeof AuthTenantsTenantIdOdometerOdometerIdRoute
   AuthTenantsTenantIdOdometerCreateRoute: typeof AuthTenantsTenantIdOdometerCreateRoute
+  AuthTenantsTenantIdServiceServiceIdRoute: typeof AuthTenantsTenantIdServiceServiceIdRoute
+  AuthTenantsTenantIdServiceCreateRoute: typeof AuthTenantsTenantIdServiceCreateRoute
   AuthTenantsTenantIdVehiclesCreateRoute: typeof AuthTenantsTenantIdVehiclesCreateRoute
   AuthTenantsTenantIdFuelIndexRoute: typeof AuthTenantsTenantIdFuelIndexRoute
   AuthTenantsTenantIdOdometerIndexRoute: typeof AuthTenantsTenantIdOdometerIndexRoute
   AuthTenantsTenantIdOperationIndexRoute: typeof AuthTenantsTenantIdOperationIndexRoute
+  AuthTenantsTenantIdServiceIndexRoute: typeof AuthTenantsTenantIdServiceIndexRoute
   AuthTenantsTenantIdVehiclesIndexRoute: typeof AuthTenantsTenantIdVehiclesIndexRoute
   AuthTenantsTenantIdVehiclesVehicleIdIndexRoute: typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRoute
 }
@@ -453,12 +516,16 @@ const AuthRouteChildren: AuthRouteChildren = {
     AuthTenantsTenantIdOdometerOdometerIdRoute,
   AuthTenantsTenantIdOdometerCreateRoute:
     AuthTenantsTenantIdOdometerCreateRoute,
+  AuthTenantsTenantIdServiceServiceIdRoute:
+    AuthTenantsTenantIdServiceServiceIdRoute,
+  AuthTenantsTenantIdServiceCreateRoute: AuthTenantsTenantIdServiceCreateRoute,
   AuthTenantsTenantIdVehiclesCreateRoute:
     AuthTenantsTenantIdVehiclesCreateRoute,
   AuthTenantsTenantIdFuelIndexRoute: AuthTenantsTenantIdFuelIndexRoute,
   AuthTenantsTenantIdOdometerIndexRoute: AuthTenantsTenantIdOdometerIndexRoute,
   AuthTenantsTenantIdOperationIndexRoute:
     AuthTenantsTenantIdOperationIndexRoute,
+  AuthTenantsTenantIdServiceIndexRoute: AuthTenantsTenantIdServiceIndexRoute,
   AuthTenantsTenantIdVehiclesIndexRoute: AuthTenantsTenantIdVehiclesIndexRoute,
   AuthTenantsTenantIdVehiclesVehicleIdIndexRoute:
     AuthTenantsTenantIdVehiclesVehicleIdIndexRoute,

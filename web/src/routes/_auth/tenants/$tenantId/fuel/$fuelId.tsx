@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { GaugeIcon } from "lucide-react";
 import { operationQuery } from "@/features/operation/queries";
-import { odometerByOperationQuery } from "@/features/odometer/queries";
+import { odometerOperationQuery } from "@/features/odometer/queries";
 import { fuelCategoriesQuery } from "@/features/category/queries";
 import { VehicleInfo } from "@/features/vehicle/components/vehicle-info";
 import type { UpdateFuelSchema } from "@/features/fuel/types";
@@ -76,7 +76,7 @@ export const Route = createFileRoute("/_auth/tenants/$tenantId/fuel/$fuelId")({
     await Promise.all([
       queryClient.ensureQueryData(operationQuery(tenantId, fuel.operationId)),
       queryClient.ensureQueryData(
-        odometerByOperationQuery(tenantId, fuel.operationId),
+        odometerOperationQuery(tenantId, fuel.operationId),
       ),
     ]);
   },
@@ -89,7 +89,7 @@ function RouteComponent() {
 
   const { data: fuel } = useSuspenseQuery(fuelQuery(tenantId, fuelId));
   const { data: odometer } = useSuspenseQuery(
-    odometerByOperationQuery(tenantId, fuel.operationId),
+    odometerOperationQuery(tenantId, fuel.operationId),
   );
 
   const form = useForm<UpdateFuelSchema>({

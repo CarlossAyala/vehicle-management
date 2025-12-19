@@ -5,6 +5,7 @@ import type { Odometer } from "../odometer/types";
 import type { Operation } from "./types";
 import type { operationKeys } from "./queries";
 import type { Pagination } from "@/lib/filters";
+import type { Service } from "../service/types";
 
 // TODO: Add filters
 export const getAll = async ({
@@ -54,7 +55,7 @@ export const getEntity = async ({
   queryKey,
 }: QueryFunctionContext<
   ReturnType<(typeof operationKeys)["entity"]>
->): Promise<{ operation: Operation; entity: Fuel | Odometer }> => {
+>): Promise<{ operation: Operation; entity: Fuel | Odometer | Service }> => {
   const [, { tenantId }, , id] = queryKey;
 
   const res = await fetch(`${API_URL}/operations/${id}/entity`, {
