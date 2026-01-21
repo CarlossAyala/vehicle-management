@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,23 +7,17 @@ import {
   useReactTable,
   type PaginationState,
 } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
-  GaugeIcon,
-} from "lucide-react";
-import type { Vehicle } from "@/features/vehicle/types";
+import type { CreateTransactionSchema } from "@/features/transaction/types";
+import { createTransactionSchema } from "@/features/transaction/schemas";
 import { vehiclesQuery } from "@/features/vehicle/queries";
-import { vehicleSelectionColumns } from "@/features/vehicle/components/columns";
 import { categoriesQuery } from "@/features/category/queries";
-import type { CreateServiceSchema } from "@/features/service/types";
-import { createServiceSchema } from "@/features/service/schemas";
-import { useCreateService } from "@/features/service/queries";
+import { vehicleSelectionColumns } from "@/features/vehicle/components/columns";
+import type { Vehicle } from "@/features/vehicle/types";
+import { useCreateTransaction } from "@/features/transaction/queries";
+import { toast } from "sonner";
 import {
   Page,
   PageContent,
@@ -32,7 +25,17 @@ import {
   PageHeader,
   PageTitle,
 } from "@/components/page";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/ui/field";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
+} from "@/ui/field";
 import { Item, ItemActions, ItemContent, ItemTitle } from "@/ui/item";
 import { Button } from "@/ui/button";
 import {
@@ -51,21 +54,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
-
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+  GaugeIcon,
+} from "lucide-react";
 import { Separator } from "@/ui/separator";
+import { Textarea } from "@/ui/textarea";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
   InputGroupText,
 } from "@/ui/input-group";
-import { Textarea } from "@/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/ui/radio-group";
 
-export const Route = createFileRoute("/_auth/tenants/$tenantId/service/create")(
-  {
-    component: RouteComponent,
-  },
-);
+export const Route = createFileRoute(
+  "/_auth/tenants/$tenantId/transaction/create",
+)({
+  component: RouteComponent,
+});
+
+/*
+ * #TODO: When the operation type change, their items has to be deleted too
+ * but before that, a confirmation modal should be shown to the user, but for
+ * now, we will leave it as is.
+ */
 
 const fallback: Vehicle[] = [];
 function RouteComponent() {
@@ -78,21 +94,14 @@ function RouteComponent() {
 
   const navigate = Route.useNavigate();
 
-  const form = useForm<CreateServiceSchema>({
-    resolver: zodResolver(createServiceSchema),
+  const form = useForm<CreateTransactionSchema>({
+    resolver: zodResolver(createTransactionSchema),
     mode: "onSubmit",
     defaultValues: {
       vehicleId: "",
-      service: {
-        description: "",
+      transaction: {
+        type: "expense",
       },
-      items: [
-        {
-          amount: 0,
-          description: "",
-          categoryId: "",
-        },
-      ],
       odometer: {
         value: 0,
         description: "",
@@ -111,7 +120,8 @@ function RouteComponent() {
     }),
   );
 
-  const categories = useQuery(categoriesQuery(tenantId, "service"));
+  const type = form.watch("transaction.type");
+  const categories = useQuery(categoriesQuery(tenantId, type));
 
   const table = useReactTable({
     data: vehicles.isSuccess ? vehicles.data.data : fallback,
@@ -134,25 +144,25 @@ function RouteComponent() {
 
   const vehicleId = rows.length > 0 ? rows[0] : "";
 
-  const { mutate, isPending } = useCreateService();
+  const { mutate, isPending } = useCreateTransaction();
 
-  const onSubmit = (values: CreateServiceSchema) => {
+  const onSubmit = (values: CreateTransactionSchema) => {
     mutate(
       { tenantId, values },
       {
-        onSuccess: ({ service }) => {
-          toast.success("Service created successfully");
+        onSuccess: ({ transaction }) => {
+          toast.success("Transaction created successfully");
 
           navigate({
-            to: "/tenants/$tenantId/service/$serviceId",
+            to: "/tenants/$tenantId/transaction/$transactionId",
             params: {
               tenantId,
-              serviceId: service.id,
+              transactionId: transaction.id,
             },
           });
         },
         onError: () => {
-          toast.error("Failed to create service");
+          toast.error("Failed to create transaction");
         },
       },
     );
@@ -162,17 +172,21 @@ function RouteComponent() {
     form.setValue("vehicleId", vehicleId);
   }, [vehicleId]);
 
+  useEffect(() => {
+    if (items.fields.length === 0) return;
+
+    window.alert("Changing the transaction type will reset the items list.");
+    items.replace([]);
+  }, [type]);
+
   return (
     <Page className="mx-auto w-full max-w-xl">
       <PageHeader>
-        <PageTitle>
-          <h2>Create service record</h2>
-        </PageTitle>
+        <PageTitle>Create Transaction</PageTitle>
         <PageDescription>
           <p>
-            Add a new service entry for a vehicle. Fill the vehicle, service
-            details and (optionally) the odometer reading. You can add an
-            odometer record later if you want to skip it now.
+            Create a new transaction by selecting a vehicle and providing the
+            necessary details.
           </p>
         </PageDescription>
       </PageHeader>
@@ -370,17 +384,70 @@ function RouteComponent() {
           <div className="space-y-8">
             <div>
               <h3 className="text-base/snug font-medium tracking-normal">
-                Service details
+                Transaction details
               </h3>
               <p className="text-muted-foreground mt-1 text-sm/snug tracking-wide">
-                Enter the details of the service performed. This is a short
-                description that will be displayed in the service list.
+                Enter the details of the transaction performed. This is a short
+                description that will be displayed in the transaction list.
               </p>
             </div>
 
             <FieldGroup>
               <Controller
-                name="service.description"
+                name="transaction.type"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <FieldSet data-invalid={fieldState.invalid}>
+                    <FieldLegend>Type</FieldLegend>
+                    <FieldDescription>
+                      Select the type of transaction you are creating.
+                    </FieldDescription>
+                    <RadioGroup
+                      name={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      aria-invalid={fieldState.invalid}
+                    >
+                      {[
+                        {
+                          id: "expense",
+                          title: "Expense",
+                          description:
+                            "A transaction representing money spent on services or maintenance.",
+                        },
+                        {
+                          id: "income",
+                          title: "Income",
+                          description:
+                            "A transaction representing money received, such as refunds or reimbursements.",
+                        },
+                      ].map((t) => (
+                        <FieldLabel key={t.id} htmlFor={`form-type-${t.id}`}>
+                          <Field
+                            orientation="horizontal"
+                            data-invalid={fieldState.invalid}
+                          >
+                            <FieldContent>
+                              <FieldTitle>{t.title}</FieldTitle>
+                              <FieldDescription>
+                                {t.description}
+                              </FieldDescription>
+                            </FieldContent>
+                            <RadioGroupItem
+                              value={t.id}
+                              id={`form-type-${t.id}`}
+                              aria-invalid={fieldState.invalid}
+                            />
+                          </Field>
+                        </FieldLabel>
+                      ))}
+                    </RadioGroup>
+                  </FieldSet>
+                )}
+              />
+
+              <Controller
+                name="transaction.description"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field
@@ -408,11 +475,11 @@ function RouteComponent() {
           <div className="space-y-8">
             <div>
               <h3 className="text-base/snug font-medium tracking-normal">
-                Service items details
+                Transaction items details
               </h3>
               <p className="text-muted-foreground mt-1 text-sm/snug tracking-wide">
-                Provide the details of the service items. You can add multiple
-                items. The total amount will be calculated automatically.
+                Add one or more items to this transaction representing the
+                services performed. Each item requires an amount and a category.
               </p>
             </div>
 
@@ -528,7 +595,7 @@ function RouteComponent() {
                           items.remove(index);
                         }}
                         variant="outline"
-                        aria-label={`Remove service item ${index + 1}`}
+                        aria-label={`Remove transaction item ${index + 1}`}
                       >
                         Remove
                       </Button>
@@ -630,7 +697,7 @@ function RouteComponent() {
             </Button>
             <Button variant="secondary" type="button" asChild>
               <Link
-                to="/tenants/$tenantId/service"
+                to="/tenants/$tenantId/transaction"
                 params={{
                   tenantId,
                 }}

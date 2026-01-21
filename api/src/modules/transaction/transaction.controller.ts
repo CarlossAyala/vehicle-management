@@ -3,24 +3,24 @@ import {
   Get,
   Post,
   Body,
-  // Patch,
   Param,
   Delete,
-  HttpCode,
-  HttpStatus,
+  Query,
+  Patch,
 } from "@nestjs/common";
 import { Permissions } from "src/common/permissions/permissions.decorator";
-import { CreateTransactionDto } from "./dto/create-transaction.dto";
-// import { UpdateTransactionDto } from "./dto/update-transaction.dto";
-import { TransactionService } from "./transaction.service";
+import { UUIDParamPipe } from "src/common/pipes/uuid-param.pipe";
 import { GetAuth } from "../auth/auth.decorator";
 import { AuthData } from "../auth/auth.interface";
-import { UUIDParamPipe } from "src/common/pipes/uuid-param.pipe";
 import { Transaction } from "./entities/transaction.entity";
+import { CreateTransactionDto } from "./dto/create-transaction.dto";
+import { TransactionFiltersDto } from "./dto/transaction-filters.dto";
+import { UpdateTransactionDto } from "./dto/update-transaction.dto";
+import { TransactionService } from "./transaction.service";
 
 @Controller("transactions")
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(private readonly service: TransactionService) {}
 
   @Permissions("TRANSACTION", "CREATE")
   @Post()
@@ -29,7 +29,13 @@ export class TransactionController {
     @Body()
     dto: CreateTransactionDto,
   ) {
-    return this.transactionService.create(auth.tenantId!, auth.userId!, dto);
+    return this.service.create(auth.tenantId!, auth.userId!, dto);
+  }
+
+  @Permissions("TRANSACTION", "READ")
+  @Get()
+  findAll(@GetAuth() auth: AuthData, @Query() filters: TransactionFiltersDto) {
+    return this.service.findAll(auth.tenantId!, filters);
   }
 
   @Permissions("TRANSACTION", "READ")
@@ -38,24 +44,25 @@ export class TransactionController {
     @GetAuth() auth: AuthData,
     @Param("id", UUIDParamPipe) id: Transaction["id"],
   ) {
-    return this.transactionService.findOne(auth.tenantId!, id);
+    return this.service.findOne(auth.tenantId!, id);
   }
 
-  // @Patch(":id")
-  // update(
-  //   @Param("id") id: string,
-  //   @Body() updateTransactionDto: UpdateTransactionDto,
-  // ) {
-  //   return this.transactionService.update(+id, updateTransactionDto);
-  // }
+  @Permissions("TRANSACTION", "UPDATE")
+  @Patch(":id")
+  update(
+    @GetAuth() auth: AuthData,
+    @Param("id", UUIDParamPipe) id: Transaction["id"],
+    @Body() dto: UpdateTransactionDto,
+  ) {
+    return this.service.update(auth.tenantId!, id, dto);
+  }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Permissions("TRANSACTION", "DELETE")
   @Delete(":id")
   remove(
     @GetAuth() auth: AuthData,
     @Param("id", UUIDParamPipe) id: Transaction["id"],
   ) {
-    return this.transactionService.remove(auth.tenantId!, id);
+    return this.service.remove(auth.tenantId!, id);
   }
 }

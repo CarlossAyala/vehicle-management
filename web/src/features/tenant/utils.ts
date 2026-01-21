@@ -1,5 +1,6 @@
 import {
   CarIcon,
+  DollarSignIcon,
   FuelIcon,
   HexagonIcon,
   HomeIcon,
@@ -77,6 +78,14 @@ export const getTenantItems = (tenantId: string): RouteItem[] => [
       tenantId,
     },
     icon: WrenchIcon,
+  },
+  {
+    title: "Transactions",
+    to: "/tenants/$tenantId/transaction",
+    params: {
+      tenantId,
+    },
+    icon: DollarSignIcon,
   },
 ];
 

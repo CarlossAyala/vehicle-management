@@ -12,8 +12,6 @@ import { queryClient } from "@/lib/utils";
 import { Toaster } from "@/ui/sonner";
 
 const RootLayout = () => {
-  console.log("Component: __root");
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Outlet />
@@ -28,8 +26,6 @@ const RootLayout = () => {
 export const Route = createRootRoute({
   component: RootLayout,
   beforeLoad: async ({ location }) => {
-    console.log("beforeLoad: __root");
-
     const user = await queryClient.ensureQueryData(profileQuery);
 
     if (user) {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   forwardRef,
   Inject,
   Injectable,
@@ -168,7 +169,7 @@ export class OperationService {
       tenantId: Tenant["id"];
       categoryId?: Category["id"];
       categoryIds?: Category["id"][];
-      type: OperationType;
+      type: OperationType | OperationType[];
     } & UpdateOperationDto,
   ): Promise<{
     operation: Operation;
@@ -250,9 +251,11 @@ export class OperationService {
   async checkCategory(
     tenantId: Tenant["id"],
     categoryIds: Category["id"][],
-    source: OperationType,
+    _sources: OperationType | OperationType[],
   ): Promise<void> {
     if (!categoryIds.length) return;
+
+    const sources = Array.isArray(_sources) ? _sources : [_sources];
 
     const uniqueIdsA = new Set(categoryIds);
 
@@ -262,17 +265,17 @@ export class OperationService {
 
     // check if all categories belong to the tenant
     if (categories.some((c) => c.tenantId && c.tenantId !== tenantId)) {
-      throw new NotFoundException("Some categories are not for this tenant");
+      throw new BadRequestException("Some categories are not for this tenant");
     }
 
     // check if all categories were found
     if (uniqueIdsA.size !== uniqueIdsB.size) {
-      throw new NotFoundException("Some categories were not found");
+      throw new BadRequestException("Some categories were not found");
     }
 
     // check if all categories are for the correct operation type
-    if (categories.some((c) => c.source !== source)) {
-      throw new NotFoundException(
+    if (categories.some((c) => !sources.includes(c.source))) {
+      throw new BadRequestException(
         "Some categories are not for this operation type",
       );
     }

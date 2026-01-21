@@ -27,4 +27,3 @@ export const updateServiceSchema = createOperationSchema
     vehicleId: true,
   })
   .partial();
-// export const serviceItemSchema = item;
