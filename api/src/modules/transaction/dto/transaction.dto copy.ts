@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
 import { TransactionType } from "../transaction.interface";
 
 export class TransactionDto {
@@ -6,6 +6,5 @@ export class TransactionDto {
   type: TransactionType;
 
   @IsString()
-  @IsOptional()
-  description?: string;
+  description: string = "";
 }

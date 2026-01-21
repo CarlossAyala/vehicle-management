@@ -38,13 +38,9 @@ import { getTenantItems, getTenantRootItems } from "@/features/tenant/utils";
 export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
   beforeLoad: async ({ location }) => {
-    console.log("beforeLoad: /_auth");
-
     const user = queryClient.getQueryData(profileQuery.queryKey);
 
     if (!user) {
-      console.log("-", location.pathname);
-
       throw redirect({
         to: "/login",
         search: {
@@ -56,8 +52,6 @@ export const Route = createFileRoute("/_auth")({
 });
 
 function RouteComponent() {
-  console.log("Component: /_auth");
-
   const { tenantId } = useParams({ strict: false });
 
   const items = tenantId ? getTenantItems(tenantId) : getTenantRootItems();

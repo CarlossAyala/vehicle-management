@@ -6,7 +6,7 @@ export class CreateTransactionItemDto {
   amount: number;
 
   @IsString()
-  description: string;
+  description: string = "";
 
   @IsUUID()
   categoryId: Category["id"];

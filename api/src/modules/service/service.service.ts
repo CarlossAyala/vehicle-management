@@ -76,7 +76,7 @@ export class ServiceService {
   async findAll(
     tenantId: Tenant["id"],
     filters: ServiceFiltersDto,
-  ): Promise<Pagination<Service>> {
+  ): Promise<Pagination<Service & { items: ServiceItem[] }>> {
     const qb = this.dataSource.manager
       .createQueryBuilder(Service, "service")
       .leftJoinAndSelect("service.items", "items")
