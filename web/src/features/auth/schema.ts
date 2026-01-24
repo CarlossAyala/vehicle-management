@@ -25,5 +25,5 @@ export const loginSchema = z.object({
 });
 
 export const loginSearchSchema = z.object({
-  redirect: z.string().default("/").catch("/"),
+  redirect: z.string().default("/tenants").catch("/tenants"),
 });

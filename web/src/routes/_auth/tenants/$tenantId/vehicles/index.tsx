@@ -15,8 +15,6 @@ export const Route = createFileRoute("/_auth/tenants/$tenantId/vehicles/")({
 });
 
 function RouteComponent() {
-  console.log("Component: /_auth/tenants/$tenantId/vehicles/");
-
   const { tenantId } = Route.useParams();
 
   const { data: vehicles } = useSuspenseQuery(vehiclesQuery(tenantId));

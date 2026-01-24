@@ -1,20 +1,20 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { profileQuery } from "@/features/auth/queries";
 import { queryClient } from "@/lib/utils";
 
-export const Route = createFileRoute("/_guest")({
+export const Route = createFileRoute("/")({
   component: RouteComponent,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const user = await queryClient.ensureQueryData(profileQuery);
 
-    if (user) {
+    if (user && location.pathname === "/") {
       throw redirect({
-        to: "/",
+        to: "/tenants",
       });
     }
   },
 });
 
 function RouteComponent() {
-  return <Outlet />;
+  return <div>Hello "/"!</div>;
 }

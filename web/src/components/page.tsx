@@ -15,7 +15,7 @@ function PageHeader({ className, ...props }: ComponentProps<"section">) {
   return (
     <section
       data-slot="page-header"
-      className={cn("grid px-6 py-4", className)}
+      className={cn("grid px-6 pt-4", className)}
       {...props}
     />
   );

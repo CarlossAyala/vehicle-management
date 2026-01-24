@@ -1,5 +1,5 @@
-import * as z from "zod";
-import type { User } from "../auth/types";
+import type z from "zod";
+import type { User } from "../user/types";
 import type { createTenantSchema } from "./schemas";
 
 export const TenantRoles = {

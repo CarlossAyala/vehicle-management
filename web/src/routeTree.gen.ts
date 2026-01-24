@@ -11,13 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GuestRouteImport } from './routes/_guest'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as AuthIndexRouteImport } from './routes/_auth/index'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuestRegisterRouteImport } from './routes/_guest/register'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
 import { Route as AuthTenantsIndexRouteImport } from './routes/_auth/tenants/index'
-import { Route as AuthOnboardingMultipleTenantsRouteImport } from './routes/_auth/onboarding/multiple-tenants'
-import { Route as AuthOnboardingInvitationRouteImport } from './routes/_auth/onboarding/invitation'
-import { Route as AuthOnboardingCreateTenantRouteImport } from './routes/_auth/onboarding/create-tenant'
 import { Route as AuthTenantsTenantIdIndexRouteImport } from './routes/_auth/tenants/$tenantId/index'
 import { Route as AuthTenantsTenantIdVehiclesIndexRouteImport } from './routes/_auth/tenants/$tenantId/vehicles/index'
 import { Route as AuthTenantsTenantIdTransactionIndexRouteImport } from './routes/_auth/tenants/$tenantId/transaction/index'
@@ -44,10 +41,10 @@ const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthIndexRoute = AuthIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const GuestRegisterRoute = GuestRegisterRouteImport.update({
   id: '/register',
@@ -64,24 +61,6 @@ const AuthTenantsIndexRoute = AuthTenantsIndexRouteImport.update({
   path: '/tenants/',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthOnboardingMultipleTenantsRoute =
-  AuthOnboardingMultipleTenantsRouteImport.update({
-    id: '/onboarding/multiple-tenants',
-    path: '/onboarding/multiple-tenants',
-    getParentRoute: () => AuthRoute,
-  } as any)
-const AuthOnboardingInvitationRoute =
-  AuthOnboardingInvitationRouteImport.update({
-    id: '/onboarding/invitation',
-    path: '/onboarding/invitation',
-    getParentRoute: () => AuthRoute,
-  } as any)
-const AuthOnboardingCreateTenantRoute =
-  AuthOnboardingCreateTenantRouteImport.update({
-    id: '/onboarding/create-tenant',
-    path: '/onboarding/create-tenant',
-    getParentRoute: () => AuthRoute,
-  } as any)
 const AuthTenantsTenantIdIndexRoute =
   AuthTenantsTenantIdIndexRouteImport.update({
     id: '/tenants/$tenantId/',
@@ -186,12 +165,9 @@ const AuthTenantsTenantIdVehiclesVehicleIdIndexRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/login': typeof GuestLoginRoute
   '/register': typeof GuestRegisterRoute
-  '/': typeof AuthIndexRoute
-  '/onboarding/create-tenant': typeof AuthOnboardingCreateTenantRoute
-  '/onboarding/invitation': typeof AuthOnboardingInvitationRoute
-  '/onboarding/multiple-tenants': typeof AuthOnboardingMultipleTenantsRoute
   '/tenants': typeof AuthTenantsIndexRoute
   '/tenants/$tenantId': typeof AuthTenantsTenantIdIndexRoute
   '/tenants/$tenantId/fuel/$fuelId': typeof AuthTenantsTenantIdFuelFuelIdRoute
@@ -212,12 +188,9 @@ export interface FileRoutesByFullPath {
   '/tenants/$tenantId/vehicles/$vehicleId': typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/login': typeof GuestLoginRoute
   '/register': typeof GuestRegisterRoute
-  '/': typeof AuthIndexRoute
-  '/onboarding/create-tenant': typeof AuthOnboardingCreateTenantRoute
-  '/onboarding/invitation': typeof AuthOnboardingInvitationRoute
-  '/onboarding/multiple-tenants': typeof AuthOnboardingMultipleTenantsRoute
   '/tenants': typeof AuthTenantsIndexRoute
   '/tenants/$tenantId': typeof AuthTenantsTenantIdIndexRoute
   '/tenants/$tenantId/fuel/$fuelId': typeof AuthTenantsTenantIdFuelFuelIdRoute
@@ -239,14 +212,11 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/_guest': typeof GuestRouteWithChildren
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/register': typeof GuestRegisterRoute
-  '/_auth/': typeof AuthIndexRoute
-  '/_auth/onboarding/create-tenant': typeof AuthOnboardingCreateTenantRoute
-  '/_auth/onboarding/invitation': typeof AuthOnboardingInvitationRoute
-  '/_auth/onboarding/multiple-tenants': typeof AuthOnboardingMultipleTenantsRoute
   '/_auth/tenants/': typeof AuthTenantsIndexRoute
   '/_auth/tenants/$tenantId/': typeof AuthTenantsTenantIdIndexRoute
   '/_auth/tenants/$tenantId/fuel/$fuelId': typeof AuthTenantsTenantIdFuelFuelIdRoute
@@ -269,12 +239,9 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/login'
     | '/register'
-    | '/'
-    | '/onboarding/create-tenant'
-    | '/onboarding/invitation'
-    | '/onboarding/multiple-tenants'
     | '/tenants'
     | '/tenants/$tenantId'
     | '/tenants/$tenantId/fuel/$fuelId'
@@ -295,12 +262,9 @@ export interface FileRouteTypes {
     | '/tenants/$tenantId/vehicles/$vehicleId'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/login'
     | '/register'
-    | '/'
-    | '/onboarding/create-tenant'
-    | '/onboarding/invitation'
-    | '/onboarding/multiple-tenants'
     | '/tenants'
     | '/tenants/$tenantId'
     | '/tenants/$tenantId/fuel/$fuelId'
@@ -321,14 +285,11 @@ export interface FileRouteTypes {
     | '/tenants/$tenantId/vehicles/$vehicleId'
   id:
     | '__root__'
+    | '/'
     | '/_auth'
     | '/_guest'
     | '/_guest/login'
     | '/_guest/register'
-    | '/_auth/'
-    | '/_auth/onboarding/create-tenant'
-    | '/_auth/onboarding/invitation'
-    | '/_auth/onboarding/multiple-tenants'
     | '/_auth/tenants/'
     | '/_auth/tenants/$tenantId/'
     | '/_auth/tenants/$tenantId/fuel/$fuelId'
@@ -350,6 +311,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   GuestRoute: typeof GuestRouteWithChildren
 }
@@ -370,12 +332,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth/': {
-      id: '/_auth/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_guest/register': {
       id: '/_guest/register'
@@ -396,27 +358,6 @@ declare module '@tanstack/react-router' {
       path: '/tenants'
       fullPath: '/tenants'
       preLoaderRoute: typeof AuthTenantsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/onboarding/multiple-tenants': {
-      id: '/_auth/onboarding/multiple-tenants'
-      path: '/onboarding/multiple-tenants'
-      fullPath: '/onboarding/multiple-tenants'
-      preLoaderRoute: typeof AuthOnboardingMultipleTenantsRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/onboarding/invitation': {
-      id: '/_auth/onboarding/invitation'
-      path: '/onboarding/invitation'
-      fullPath: '/onboarding/invitation'
-      preLoaderRoute: typeof AuthOnboardingInvitationRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/onboarding/create-tenant': {
-      id: '/_auth/onboarding/create-tenant'
-      path: '/onboarding/create-tenant'
-      fullPath: '/onboarding/create-tenant'
-      preLoaderRoute: typeof AuthOnboardingCreateTenantRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/tenants/$tenantId/': {
@@ -542,10 +483,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteChildren {
-  AuthIndexRoute: typeof AuthIndexRoute
-  AuthOnboardingCreateTenantRoute: typeof AuthOnboardingCreateTenantRoute
-  AuthOnboardingInvitationRoute: typeof AuthOnboardingInvitationRoute
-  AuthOnboardingMultipleTenantsRoute: typeof AuthOnboardingMultipleTenantsRoute
   AuthTenantsIndexRoute: typeof AuthTenantsIndexRoute
   AuthTenantsTenantIdIndexRoute: typeof AuthTenantsTenantIdIndexRoute
   AuthTenantsTenantIdFuelFuelIdRoute: typeof AuthTenantsTenantIdFuelFuelIdRoute
@@ -567,10 +504,6 @@ interface AuthRouteChildren {
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthIndexRoute: AuthIndexRoute,
-  AuthOnboardingCreateTenantRoute: AuthOnboardingCreateTenantRoute,
-  AuthOnboardingInvitationRoute: AuthOnboardingInvitationRoute,
-  AuthOnboardingMultipleTenantsRoute: AuthOnboardingMultipleTenantsRoute,
   AuthTenantsIndexRoute: AuthTenantsIndexRoute,
   AuthTenantsTenantIdIndexRoute: AuthTenantsTenantIdIndexRoute,
   AuthTenantsTenantIdFuelFuelIdRoute: AuthTenantsTenantIdFuelFuelIdRoute,
@@ -615,6 +548,7 @@ const GuestRouteChildren: GuestRouteChildren = {
 const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   GuestRoute: GuestRouteWithChildren,
 }

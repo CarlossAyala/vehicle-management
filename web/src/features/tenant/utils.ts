@@ -2,11 +2,9 @@ import {
   CarIcon,
   DollarSignIcon,
   FuelIcon,
-  HexagonIcon,
   HomeIcon,
   ListTreeIcon,
   NavigationIcon,
-  UserIcon,
   WrenchIcon,
 } from "lucide-react";
 import type { RouteItem } from "@/lib/utils";
@@ -26,11 +24,7 @@ export const TenantTypeValues = [
   },
 ] as const;
 
-export const getTenantIcon = (type: Tenant["type"]) => {
-  return type === "personal" ? UserIcon : HexagonIcon;
-};
-
-export const getTenantItems = (tenantId: string): RouteItem[] => [
+export const getTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
   {
     title: "Dashboard",
     to: "/tenants/$tenantId",
@@ -89,7 +83,7 @@ export const getTenantItems = (tenantId: string): RouteItem[] => [
   },
 ];
 
-export const getTenantRootItems = (): RouteItem[] => [
+export const getNonTenantNav = (): RouteItem[] => [
   {
     title: "Tenants",
     to: "/tenants",

@@ -4,13 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import type { Tenant, UserTenant } from "./types";
-import {
-  createTenant,
-  getTenant,
-  getTenants,
-  getUserTenant,
-  getUserTenants,
-} from "./api";
+import { create, getOne, getAll, getUserTenant, getUserTenants } from "./api";
 
 export const tenantKeys = {
   key: () => ["tenants"] as const,
@@ -31,13 +25,13 @@ export const userTenantKeys = {
 export const tenantQuery = (id: Tenant["id"]) => {
   return queryOptions({
     queryKey: tenantKeys.detail(id),
-    queryFn: () => getTenant(id),
+    queryFn: () => getOne(id),
   });
 };
 
 export const tenantsQuery = queryOptions({
   queryKey: tenantKeys.list(),
-  queryFn: getTenants,
+  queryFn: getAll,
 });
 
 export const userTenantQuery = (id: UserTenant["id"]) => {
@@ -56,7 +50,7 @@ export const useCreateTenant = () => {
   const query = useQueryClient();
 
   return useMutation({
-    mutationFn: createTenant,
+    mutationFn: create,
     onSuccess: ({ tenant, userTenant }) => {
       query.setQueryData(tenantQuery(tenant.id).queryKey, tenant);
       query.setQueryData(tenantsQuery.queryKey, (previous = []) => {

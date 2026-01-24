@@ -1,8 +1,8 @@
 import { API_URL } from "@/lib/utils";
 import type { CreateTenantDto, Tenant, UserTenant } from "./types";
 
-export const createTenant = async (
-  data: CreateTenantDto,
+export const create = async (
+  values: CreateTenantDto,
 ): Promise<{
   tenant: Tenant;
   userTenant: UserTenant;
@@ -13,7 +13,7 @@ export const createTenant = async (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(values),
   });
   if (!res.ok) {
     throw new Error("Failed to create tenant");
@@ -22,7 +22,7 @@ export const createTenant = async (
   return res.json();
 };
 
-export const getTenants = async (): Promise<Tenant[]> => {
+export const getAll = async (): Promise<Tenant[]> => {
   const res = await fetch(`${API_URL}/tenants`, {
     credentials: "include",
   });
@@ -33,7 +33,7 @@ export const getTenants = async (): Promise<Tenant[]> => {
   return res.json();
 };
 
-export const getTenant = async (id: Tenant["id"]): Promise<Tenant> => {
+export const getOne = async (id: Tenant["id"]): Promise<Tenant> => {
   const res = await fetch(`${API_URL}/tenants/${id}`, {
     credentials: "include",
   });

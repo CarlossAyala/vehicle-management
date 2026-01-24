@@ -11,7 +11,6 @@ import { Webhook } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -23,7 +22,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/ui/sidebar";
-import { TenantSwitcher } from "@/features/tenant/components/tenants-switcher";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -33,7 +31,7 @@ import {
   BreadcrumbSeparator,
 } from "@/ui/breadcrumb";
 import { NavUser } from "@/features/auth/components/nav-user";
-import { getTenantItems, getTenantRootItems } from "@/features/tenant/utils";
+import { getTenantNav, getNonTenantNav } from "@/features/tenant/utils";
 
 export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
@@ -54,7 +52,7 @@ export const Route = createFileRoute("/_auth")({
 function RouteComponent() {
   const { tenantId } = useParams({ strict: false });
 
-  const items = tenantId ? getTenantItems(tenantId) : getTenantRootItems();
+  const items = tenantId ? getTenantNav(tenantId) : getNonTenantNav();
 
   return (
     <SidebarProvider>
@@ -67,12 +65,12 @@ function RouteComponent() {
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 asChild
               >
-                <Link to="/">
+                <Link to="/tenants">
                   <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                     <Webhook className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">Garage</span>
+                    <span className="truncate font-medium">VMS</span>
                     <span className="truncate text-xs">Carlos Ayala</span>
                   </div>
                 </Link>
@@ -99,9 +97,6 @@ function RouteComponent() {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          {tenantId ? <TenantSwitcher tenantId={tenantId} /> : null}
-        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="bg-background sticky top-0 z-50 flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
@@ -125,9 +120,7 @@ function RouteComponent() {
             <NavUser />
           </div>
         </header>
-        {/* <div className="flex flex-1 flex-col gap-4 px-6 pt-4 pb-6"> */}
         <Outlet />
-        {/* </div> */}
       </SidebarInset>
     </SidebarProvider>
   );

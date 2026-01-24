@@ -1,4 +1,4 @@
-import * as z from "zod";
+import z from "zod";
 
 const name = z.string().min(1, "Name is required");
 const description = z.string();
