@@ -5,9 +5,9 @@ import { User } from "../user/entities/user.entity";
 import { UserTenantService } from "../user-tenant/user-tenant.service";
 import { Tenant } from "./entities/tenant.entity";
 import { CreateTenantDto } from "./dto/create-tenant.dto";
-import { UpdateTenantDto } from "./dto/update-tenant.dto";
 import { UserTenant } from "../user-tenant/entities/user-tenant.entity";
 import { TenantRole } from "../user-tenant/user-tenant.interface";
+import { UpdateRolesDto } from "./dto/update-roles.dto";
 
 @Injectable()
 export class TenantsService {
@@ -79,11 +79,81 @@ export class TenantsService {
     return this.findByIdOrFail(tenantId);
   }
 
-  update(id: number, _dto: UpdateTenantDto) {
-    return `This action updates a #${id} tenant`;
+  async findMembers(tenantId: Tenant["id"]): Promise<User[]> {
+    return this.dataSource.getRepository(User).find({
+      where: {
+        roles: {
+          tenantId,
+        },
+      },
+      relations: {
+        roles: true,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tenant`;
+  async addUser(
+    userId: User["id"],
+    tenantId: Tenant["id"],
+    role: TenantRole,
+  ): Promise<UserTenant> {
+    return this.dataSource.transaction(async (manager) => {
+      const _userTenant = manager.create(UserTenant, {
+        userId,
+        tenantId,
+        role,
+      });
+      return manager.save(_userTenant);
+    });
+  }
+
+  async updateRoles(
+    tenantId: Tenant["id"],
+    userId: User["id"],
+    dto: UpdateRolesDto,
+  ): Promise<UserTenant[]> {
+    const roles = await this.userTenantService.findAllByUserId(userId);
+    if (roles.length === 0) {
+      throw new NotFoundException("Member not found");
+    }
+
+    const toRemove = roles.filter((r) => !dto.roles.includes(r.role));
+    const toCreate = dto.roles.filter(
+      (r) => !roles.some((ur) => ur.role === r),
+    );
+
+    return this.dataSource.transaction(async (manager) => {
+      await manager.remove(UserTenant, toRemove);
+      const created = await manager.save(
+        UserTenant,
+        toCreate.map((role) => ({ userId, tenantId, role })),
+      );
+
+      return roles.filter((r) => dto.roles.includes(r.role)).concat(created);
+    });
+  }
+
+  async removeMember(
+    tenantId: Tenant["id"],
+    userId: User["id"],
+  ): Promise<void> {
+    const membership = await this.userTenantService.findByUserIdAndTenantId(
+      userId,
+      tenantId,
+    );
+    if (!membership) {
+      throw new NotFoundException("Member not found");
+    }
+
+    return this.dataSource.transaction(async (manager) => {
+      const members = await this.dataSource
+        .getRepository(UserTenant)
+        .findBy({ tenantId });
+      const users = new Set(members.map((m) => m.userId));
+      if (users.size === 1) {
+        const tenant = await this.findByIdOrFail(tenantId);
+        await manager.remove(Tenant, tenant);
+      }
+    });
   }
 }

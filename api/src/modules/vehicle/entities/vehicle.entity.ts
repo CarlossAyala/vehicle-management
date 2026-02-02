@@ -69,7 +69,9 @@ export class Vehicle {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Tenant, (tenant) => tenant.vehicles)
+  @ManyToOne(() => Tenant, (tenant) => tenant.vehicles, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "tenantId" })
   tenant: Tenant;
 

@@ -4,11 +4,14 @@ import {
   FuelIcon,
   HomeIcon,
   ListTreeIcon,
+  MailIcon,
   NavigationIcon,
+  UsersIcon,
   WrenchIcon,
 } from "lucide-react";
 import type { RouteItem } from "@/lib/utils";
-import type { Tenant } from "./types";
+import type { Tenant, TenantRole } from "./types";
+import { linkOptions } from "@tanstack/react-router";
 
 // TODO: Change the description
 export const TenantTypeValues = [
@@ -24,7 +27,18 @@ export const TenantTypeValues = [
   },
 ] as const;
 
-export const getTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
+export const ROLES_LABEL = {
+  owner: "Owner",
+  admin: "Admin",
+  fleet_manager: "Fleet Manager",
+  driver: "Driver",
+  member: "Member",
+};
+export const getRoleLabel = (role: TenantRole): string => {
+  return ROLES_LABEL[role];
+};
+
+export const getHomeTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
   {
     title: "Dashboard",
     to: "/tenants/$tenantId",
@@ -83,10 +97,28 @@ export const getTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
   },
 ];
 
-export const getNonTenantNav = (): RouteItem[] => [
+export const getHomeNonTenantNav = (): RouteItem[] => [
   {
     title: "Tenants",
     to: "/tenants",
     icon: HomeIcon,
+  },
+  {
+    title: "Invitations",
+    to: "/invitations",
+    icon: MailIcon,
+  },
+];
+
+export const getSettingsTenantNav = (tenantId: Tenant["id"]) => [
+  {
+    label: "Members",
+    icon: UsersIcon,
+    link: linkOptions({
+      to: "/tenants/$tenantId/members",
+      params: {
+        tenantId,
+      },
+    }),
   },
 ];

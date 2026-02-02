@@ -30,7 +30,7 @@ export class AuthController {
   @Public()
   @Post("register")
   async register(@Body() dto: RegisterDto): Promise<void> {
-    return this.authService.register(dto);
+    await this.authService.register(dto);
   }
 
   @Public()

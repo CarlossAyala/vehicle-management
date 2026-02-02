@@ -3,5 +3,5 @@ export enum TenantRole {
   ADMIN = "admin",
   FLEET_MANAGER = "fleet_manager",
   DRIVER = "driver",
-  VIEWER = "viewer",
+  MEMBER = "member",
 }

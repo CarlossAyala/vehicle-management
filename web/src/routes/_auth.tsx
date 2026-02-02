@@ -1,13 +1,15 @@
 import {
   createFileRoute,
   Link,
+  linkOptions,
   Outlet,
   redirect,
   useParams,
+  type LinkOptions,
 } from "@tanstack/react-router";
 import { profileQuery } from "@/features/auth/queries";
 import { queryClient } from "@/lib/utils";
-import { Webhook } from "lucide-react";
+import { Icon, UsersIcon, Webhook } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -31,7 +33,12 @@ import {
   BreadcrumbSeparator,
 } from "@/ui/breadcrumb";
 import { NavUser } from "@/features/auth/components/nav-user";
-import { getTenantNav, getNonTenantNav } from "@/features/tenant/utils";
+import {
+  getHomeTenantNav,
+  getHomeNonTenantNav,
+  getSettingsTenantNav,
+} from "@/features/tenant/utils";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
@@ -52,7 +59,13 @@ export const Route = createFileRoute("/_auth")({
 function RouteComponent() {
   const { tenantId } = useParams({ strict: false });
 
-  const items = tenantId ? getTenantNav(tenantId) : getNonTenantNav();
+  const home = useMemo(() => {
+    return tenantId ? getHomeTenantNav(tenantId) : getHomeNonTenantNav();
+  }, [tenantId]);
+
+  const settings = useMemo(() => {
+    return tenantId ? getSettingsTenantNav(tenantId) : [];
+  }, [tenantId]);
 
   return (
     <SidebarProvider>
@@ -80,10 +93,10 @@ function RouteComponent() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Menu</SidebarGroupLabel>
+            <SidebarGroupLabel>Home</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {items.map((item) => (
+                {home.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild tooltip={item.title}>
                       <Link {...item}>
@@ -96,6 +109,25 @@ function RouteComponent() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+          {tenantId ? (
+            <SidebarGroup>
+              <SidebarGroupLabel>Settings</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {settings.map((item) => (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton asChild tooltip={item.label}>
+                        <Link {...item.link}>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ) : null}
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { EllipsisIcon } from "lucide-react";
 import type { Tenant } from "@/features/tenant/types";
 import { tenantsQuery } from "@/features/tenant/queries";
@@ -18,12 +18,14 @@ export const Route = createFileRoute("/_auth/tenants/")({
 function RouteComponent() {
   const [search, setSearch] = useState("");
 
-  const { data } = useSuspenseQuery(tenantsQuery);
-  const tenants = !search
-    ? data
-    : data.filter((tenant) => {
-        return tenant.name.toLowerCase().includes(search.toLowerCase());
-      });
+  const { isPending, isError, data } = useQuery(tenantsQuery);
+  const tenants = !data
+    ? []
+    : !search
+      ? data
+      : data.filter((tenant) => {
+          return tenant.name.toLowerCase().includes(search.toLowerCase());
+        });
 
   const columns = useMemo((): ColumnDef<Tenant>[] => {
     return [
@@ -107,7 +109,13 @@ function RouteComponent() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <DataTable columns={columns} data={tenants} />
+        {isPending ? (
+          "Loading..."
+        ) : isError ? (
+          "Error "
+        ) : (
+          <DataTable columns={columns} data={tenants} />
+        )}
       </PageContent>
     </Page>
   );

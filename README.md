@@ -1,20 +1,8 @@
 # vehicle-management
 
-This project is a simple vehicle management system that allows users to add, view, and manage their vehicles.
-
-## Observations
-
-- In the tables, when the entities should render a Drawer in the right with a quick view about the entity and have button to close, edit or open (new tab)
-
-## Questions
-
-- Should i permit switch vehicle when editing FUEL? It appear to be a good call
-
 ## TODO
 
-### Add pagination and filters to all pages
-
-- [ ] Vehicles
-- [ ] Fuel
-
-### Add EmptyStates to all resources
+- Add empty-states and error handling
+- Add pagination and filters
+- Add te possibility to switch the vehicle in `operations`
+- Add a `drawer` each entity to show more details about that resource

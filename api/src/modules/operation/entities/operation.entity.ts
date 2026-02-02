@@ -43,27 +43,41 @@ export class Operation {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Tenant, (tenant) => tenant.operations)
+  @ManyToOne(() => Tenant, (tenant) => tenant.operations, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "tenantId" })
   tenant: Tenant;
 
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.operations)
+  @ManyToOne(() => Vehicle, (vehicle) => vehicle.operations, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "vehicleId" })
   vehicle: Vehicle;
 
-  @ManyToOne(() => User, (user) => user.operations)
+  @ManyToOne(() => User, (user) => user.operations, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "authorId" })
   author: User;
 
-  @OneToOne(() => Odometer, (odometer) => odometer.operation)
+  @OneToOne(() => Odometer, (odometer) => odometer.operation, {
+    onDelete: "CASCADE",
+  })
   odometer: Odometer;
 
-  @OneToOne(() => Service, (service) => service.operation)
+  @OneToOne(() => Service, (service) => service.operation, {
+    onDelete: "CASCADE",
+  })
   service: Service;
 
-  @OneToOne(() => Fuel, (fuel) => fuel.operation)
+  @OneToOne(() => Fuel, (fuel) => fuel.operation, {
+    onDelete: "CASCADE",
+  })
   fuel: Fuel;
 
-  @OneToOne(() => Transaction, (transaction) => transaction.operation)
+  @OneToOne(() => Transaction, (transaction) => transaction.operation, {
+    onDelete: "CASCADE",
+  })
   transaction: Transaction;
 }

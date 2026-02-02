@@ -1,13 +1,13 @@
 import type z from "zod";
 import type { User } from "../user/types";
-import type { createTenantSchema } from "./schemas";
+import type { createTenantSchema, updateRolesSchema } from "./schemas";
 
 export const TenantRoles = {
   OWNER: "owner",
   ADMIN: "admin",
   FLEET_MANAGER: "fleet_manager",
   DRIVER: "driver",
-  VIEWER: "viewer",
+  MEMBER: "member",
 } as const;
 
 export type TenantRole = (typeof TenantRoles)[keyof typeof TenantRoles];
@@ -38,3 +38,4 @@ export interface UserTenant {
 }
 
 export type CreateTenantDto = z.infer<typeof createTenantSchema>;
+export type UpdateRoles = z.infer<typeof updateRolesSchema>;

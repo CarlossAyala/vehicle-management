@@ -18,7 +18,7 @@ export class AuthService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async register(dto: RegisterDto): Promise<void> {
+  async register(dto: RegisterDto): Promise<User> {
     const { email, password, firstName, lastName } = dto;
 
     const account = await this.userService.findByEmail(email);
@@ -26,7 +26,7 @@ export class AuthService {
       throw new BadRequestException("Email already in use");
     }
 
-    await this.dataSource.transaction(async (manager) => {
+    return this.dataSource.transaction(async (manager) => {
       const hash = this.generateHash(password);
 
       const _user = manager.create(User, {
@@ -35,7 +35,9 @@ export class AuthService {
         lastName,
         password: hash,
       });
-      await manager.save(_user);
+      const user = await manager.save(_user);
+
+      return user;
     });
   }
 
