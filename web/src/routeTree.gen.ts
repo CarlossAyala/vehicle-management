@@ -10,10 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as GuestRouteImport } from './routes/_guest'
-import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuestRegisterRouteImport } from './routes/_guest/register'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
+import { Route as AuthForYouRouteRouteImport } from './routes/_auth/for-you/route'
 import { Route as AuthTenantsIndexRouteImport } from './routes/_auth/tenants/index'
 import { Route as AuthInvitationsIndexRouteImport } from './routes/_auth/invitations/index'
 import { Route as AuthTenantsTenantIdIndexRouteImport } from './routes/_auth/tenants/$tenantId/index'
@@ -39,7 +40,7 @@ const GuestRoute = GuestRouteImport.update({
   id: '/_guest',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
+const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
@@ -58,127 +59,133 @@ const GuestLoginRoute = GuestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => GuestRoute,
 } as any)
+const AuthForYouRouteRoute = AuthForYouRouteRouteImport.update({
+  id: '/for-you',
+  path: '/for-you',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthTenantsIndexRoute = AuthTenantsIndexRouteImport.update({
   id: '/tenants/',
   path: '/tenants/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthInvitationsIndexRoute = AuthInvitationsIndexRouteImport.update({
   id: '/invitations/',
   path: '/invitations/',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthTenantsTenantIdIndexRoute =
   AuthTenantsTenantIdIndexRouteImport.update({
     id: '/tenants/$tenantId/',
     path: '/tenants/$tenantId/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdVehiclesIndexRoute =
   AuthTenantsTenantIdVehiclesIndexRouteImport.update({
     id: '/tenants/$tenantId/vehicles/',
     path: '/tenants/$tenantId/vehicles/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdTransactionIndexRoute =
   AuthTenantsTenantIdTransactionIndexRouteImport.update({
     id: '/tenants/$tenantId/transaction/',
     path: '/tenants/$tenantId/transaction/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdServiceIndexRoute =
   AuthTenantsTenantIdServiceIndexRouteImport.update({
     id: '/tenants/$tenantId/service/',
     path: '/tenants/$tenantId/service/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdOperationIndexRoute =
   AuthTenantsTenantIdOperationIndexRouteImport.update({
     id: '/tenants/$tenantId/operation/',
     path: '/tenants/$tenantId/operation/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdOdometerIndexRoute =
   AuthTenantsTenantIdOdometerIndexRouteImport.update({
     id: '/tenants/$tenantId/odometer/',
     path: '/tenants/$tenantId/odometer/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdMembersIndexRoute =
   AuthTenantsTenantIdMembersIndexRouteImport.update({
     id: '/tenants/$tenantId/members/',
     path: '/tenants/$tenantId/members/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdFuelIndexRoute =
   AuthTenantsTenantIdFuelIndexRouteImport.update({
     id: '/tenants/$tenantId/fuel/',
     path: '/tenants/$tenantId/fuel/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdVehiclesCreateRoute =
   AuthTenantsTenantIdVehiclesCreateRouteImport.update({
     id: '/tenants/$tenantId/vehicles/create',
     path: '/tenants/$tenantId/vehicles/create',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdTransactionCreateRoute =
   AuthTenantsTenantIdTransactionCreateRouteImport.update({
     id: '/tenants/$tenantId/transaction/create',
     path: '/tenants/$tenantId/transaction/create',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdTransactionTransactionIdRoute =
   AuthTenantsTenantIdTransactionTransactionIdRouteImport.update({
     id: '/tenants/$tenantId/transaction/$transactionId',
     path: '/tenants/$tenantId/transaction/$transactionId',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdServiceCreateRoute =
   AuthTenantsTenantIdServiceCreateRouteImport.update({
     id: '/tenants/$tenantId/service/create',
     path: '/tenants/$tenantId/service/create',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdServiceServiceIdRoute =
   AuthTenantsTenantIdServiceServiceIdRouteImport.update({
     id: '/tenants/$tenantId/service/$serviceId',
     path: '/tenants/$tenantId/service/$serviceId',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdOdometerCreateRoute =
   AuthTenantsTenantIdOdometerCreateRouteImport.update({
     id: '/tenants/$tenantId/odometer/create',
     path: '/tenants/$tenantId/odometer/create',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdOdometerOdometerIdRoute =
   AuthTenantsTenantIdOdometerOdometerIdRouteImport.update({
     id: '/tenants/$tenantId/odometer/$odometerId',
     path: '/tenants/$tenantId/odometer/$odometerId',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdFuelCreateRoute =
   AuthTenantsTenantIdFuelCreateRouteImport.update({
     id: '/tenants/$tenantId/fuel/create',
     path: '/tenants/$tenantId/fuel/create',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdFuelFuelIdRoute =
   AuthTenantsTenantIdFuelFuelIdRouteImport.update({
     id: '/tenants/$tenantId/fuel/$fuelId',
     path: '/tenants/$tenantId/fuel/$fuelId',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 const AuthTenantsTenantIdVehiclesVehicleIdIndexRoute =
   AuthTenantsTenantIdVehiclesVehicleIdIndexRouteImport.update({
     id: '/tenants/$tenantId/vehicles/$vehicleId/',
     path: '/tenants/$tenantId/vehicles/$vehicleId/',
-    getParentRoute: () => AuthRoute,
+    getParentRoute: () => AuthRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/for-you': typeof AuthForYouRouteRoute
   '/login': typeof GuestLoginRoute
   '/register': typeof GuestRegisterRoute
   '/invitations': typeof AuthInvitationsIndexRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/for-you': typeof AuthForYouRouteRoute
   '/login': typeof GuestLoginRoute
   '/register': typeof GuestRegisterRoute
   '/invitations': typeof AuthInvitationsIndexRoute
@@ -230,8 +238,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_auth': typeof AuthRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
   '/_guest': typeof GuestRouteWithChildren
+  '/_auth/for-you': typeof AuthForYouRouteRoute
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/register': typeof GuestRegisterRoute
   '/_auth/invitations/': typeof AuthInvitationsIndexRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/for-you'
     | '/login'
     | '/register'
     | '/invitations'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/for-you'
     | '/login'
     | '/register'
     | '/invitations'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/_guest'
+    | '/_auth/for-you'
     | '/_guest/login'
     | '/_guest/register'
     | '/_auth/invitations/'
@@ -337,7 +349,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   GuestRoute: typeof GuestRouteWithChildren
 }
 
@@ -354,7 +366,7 @@ declare module '@tanstack/react-router' {
       id: '/_auth'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthRouteImport
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -378,150 +390,158 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRoute
     }
+    '/_auth/for-you': {
+      id: '/_auth/for-you'
+      path: '/for-you'
+      fullPath: '/for-you'
+      preLoaderRoute: typeof AuthForYouRouteRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/tenants/': {
       id: '/_auth/tenants/'
       path: '/tenants'
       fullPath: '/tenants'
       preLoaderRoute: typeof AuthTenantsIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/invitations/': {
       id: '/_auth/invitations/'
       path: '/invitations'
       fullPath: '/invitations'
       preLoaderRoute: typeof AuthInvitationsIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/': {
       id: '/_auth/tenants/$tenantId/'
       path: '/tenants/$tenantId'
       fullPath: '/tenants/$tenantId'
       preLoaderRoute: typeof AuthTenantsTenantIdIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/vehicles/': {
       id: '/_auth/tenants/$tenantId/vehicles/'
       path: '/tenants/$tenantId/vehicles'
       fullPath: '/tenants/$tenantId/vehicles'
       preLoaderRoute: typeof AuthTenantsTenantIdVehiclesIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/transaction/': {
       id: '/_auth/tenants/$tenantId/transaction/'
       path: '/tenants/$tenantId/transaction'
       fullPath: '/tenants/$tenantId/transaction'
       preLoaderRoute: typeof AuthTenantsTenantIdTransactionIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/service/': {
       id: '/_auth/tenants/$tenantId/service/'
       path: '/tenants/$tenantId/service'
       fullPath: '/tenants/$tenantId/service'
       preLoaderRoute: typeof AuthTenantsTenantIdServiceIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/operation/': {
       id: '/_auth/tenants/$tenantId/operation/'
       path: '/tenants/$tenantId/operation'
       fullPath: '/tenants/$tenantId/operation'
       preLoaderRoute: typeof AuthTenantsTenantIdOperationIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/odometer/': {
       id: '/_auth/tenants/$tenantId/odometer/'
       path: '/tenants/$tenantId/odometer'
       fullPath: '/tenants/$tenantId/odometer'
       preLoaderRoute: typeof AuthTenantsTenantIdOdometerIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/members/': {
       id: '/_auth/tenants/$tenantId/members/'
       path: '/tenants/$tenantId/members'
       fullPath: '/tenants/$tenantId/members'
       preLoaderRoute: typeof AuthTenantsTenantIdMembersIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/fuel/': {
       id: '/_auth/tenants/$tenantId/fuel/'
       path: '/tenants/$tenantId/fuel'
       fullPath: '/tenants/$tenantId/fuel'
       preLoaderRoute: typeof AuthTenantsTenantIdFuelIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/vehicles/create': {
       id: '/_auth/tenants/$tenantId/vehicles/create'
       path: '/tenants/$tenantId/vehicles/create'
       fullPath: '/tenants/$tenantId/vehicles/create'
       preLoaderRoute: typeof AuthTenantsTenantIdVehiclesCreateRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/transaction/create': {
       id: '/_auth/tenants/$tenantId/transaction/create'
       path: '/tenants/$tenantId/transaction/create'
       fullPath: '/tenants/$tenantId/transaction/create'
       preLoaderRoute: typeof AuthTenantsTenantIdTransactionCreateRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/transaction/$transactionId': {
       id: '/_auth/tenants/$tenantId/transaction/$transactionId'
       path: '/tenants/$tenantId/transaction/$transactionId'
       fullPath: '/tenants/$tenantId/transaction/$transactionId'
       preLoaderRoute: typeof AuthTenantsTenantIdTransactionTransactionIdRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/service/create': {
       id: '/_auth/tenants/$tenantId/service/create'
       path: '/tenants/$tenantId/service/create'
       fullPath: '/tenants/$tenantId/service/create'
       preLoaderRoute: typeof AuthTenantsTenantIdServiceCreateRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/service/$serviceId': {
       id: '/_auth/tenants/$tenantId/service/$serviceId'
       path: '/tenants/$tenantId/service/$serviceId'
       fullPath: '/tenants/$tenantId/service/$serviceId'
       preLoaderRoute: typeof AuthTenantsTenantIdServiceServiceIdRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/odometer/create': {
       id: '/_auth/tenants/$tenantId/odometer/create'
       path: '/tenants/$tenantId/odometer/create'
       fullPath: '/tenants/$tenantId/odometer/create'
       preLoaderRoute: typeof AuthTenantsTenantIdOdometerCreateRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/odometer/$odometerId': {
       id: '/_auth/tenants/$tenantId/odometer/$odometerId'
       path: '/tenants/$tenantId/odometer/$odometerId'
       fullPath: '/tenants/$tenantId/odometer/$odometerId'
       preLoaderRoute: typeof AuthTenantsTenantIdOdometerOdometerIdRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/fuel/create': {
       id: '/_auth/tenants/$tenantId/fuel/create'
       path: '/tenants/$tenantId/fuel/create'
       fullPath: '/tenants/$tenantId/fuel/create'
       preLoaderRoute: typeof AuthTenantsTenantIdFuelCreateRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/fuel/$fuelId': {
       id: '/_auth/tenants/$tenantId/fuel/$fuelId'
       path: '/tenants/$tenantId/fuel/$fuelId'
       fullPath: '/tenants/$tenantId/fuel/$fuelId'
       preLoaderRoute: typeof AuthTenantsTenantIdFuelFuelIdRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/tenants/$tenantId/vehicles/$vehicleId/': {
       id: '/_auth/tenants/$tenantId/vehicles/$vehicleId/'
       path: '/tenants/$tenantId/vehicles/$vehicleId'
       fullPath: '/tenants/$tenantId/vehicles/$vehicleId'
       preLoaderRoute: typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof AuthRouteRoute
     }
   }
 }
 
-interface AuthRouteChildren {
+interface AuthRouteRouteChildren {
+  AuthForYouRouteRoute: typeof AuthForYouRouteRoute
   AuthInvitationsIndexRoute: typeof AuthInvitationsIndexRoute
   AuthTenantsIndexRoute: typeof AuthTenantsIndexRoute
   AuthTenantsTenantIdIndexRoute: typeof AuthTenantsTenantIdIndexRoute
@@ -544,7 +564,8 @@ interface AuthRouteChildren {
   AuthTenantsTenantIdVehiclesVehicleIdIndexRoute: typeof AuthTenantsTenantIdVehiclesVehicleIdIndexRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthForYouRouteRoute: AuthForYouRouteRoute,
   AuthInvitationsIndexRoute: AuthInvitationsIndexRoute,
   AuthTenantsIndexRoute: AuthTenantsIndexRoute,
   AuthTenantsTenantIdIndexRoute: AuthTenantsTenantIdIndexRoute,
@@ -576,7 +597,9 @@ const AuthRouteChildren: AuthRouteChildren = {
     AuthTenantsTenantIdVehiclesVehicleIdIndexRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
 
 interface GuestRouteChildren {
   GuestLoginRoute: typeof GuestLoginRoute
@@ -592,7 +615,7 @@ const GuestRouteWithChildren = GuestRoute._addFileChildren(GuestRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   GuestRoute: GuestRouteWithChildren,
 }
 export const routeTree = rootRouteImport

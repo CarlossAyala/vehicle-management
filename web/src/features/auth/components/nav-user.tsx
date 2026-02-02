@@ -28,9 +28,7 @@ export const NavUser = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="h-10 w-10 rounded">
-          {/* TODO: add user avatar */}
-          {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-          <AvatarImage src={undefined} alt={user.firstName} />
+          <AvatarImage src={undefined} alt="user profile avatar" />
           <AvatarFallback className="rounded-lg">
             {user.initials}
           </AvatarFallback>
@@ -42,17 +40,16 @@ export const NavUser = () => {
         align="end"
         sideOffset={4}
       >
-        <DropdownMenuLabel className="p-0 font-normal">
+        <DropdownMenuLabel className="text-foreground p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-10 w-10 rounded-lg">
-              {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-              <AvatarImage src={undefined} alt={user.firstName} />
+              <AvatarImage src={undefined} alt="user profile avatar" />
               <AvatarFallback className="rounded-lg">
                 {user.initials}
               </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.firstName}</span>
+              <span className="truncate font-medium">{user.fullName}</span>
               <span className="truncate text-xs">{user.email}</span>
             </div>
           </div>

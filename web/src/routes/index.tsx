@@ -1,20 +1,29 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { profileQuery } from "@/features/auth/queries";
-import { queryClient } from "@/lib/utils";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
-  beforeLoad: async ({ location }) => {
-    const user = await queryClient.ensureQueryData(profileQuery);
-
-    if (user && location.pathname === "/") {
-      throw redirect({
-        to: "/tenants",
-      });
-    }
-  },
 });
 
 function RouteComponent() {
-  return <div>Hello "/"!</div>;
+  return (
+    <section className="grid gap-4">
+      <div>Hello "/"!</div>
+
+      <ul className="list-disc">
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
+        <li>
+          <Link to="/tenants">Tenants</Link>
+        </li>
+      </ul>
+
+      <ul className="list-disc">
+        <li>
+          Now this is a story all about how, my life got flipped-turned upside
+          down
+        </li>
+      </ul>
+    </section>
+  );
 }

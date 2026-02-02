@@ -1,11 +1,13 @@
 import {
   CarIcon,
+  CircleUserRoundIcon,
   DollarSignIcon,
   FuelIcon,
-  HomeIcon,
+  LayersIcon,
   ListTreeIcon,
   MailIcon,
   NavigationIcon,
+  SquareActivityIcon,
   UsersIcon,
   WrenchIcon,
 } from "lucide-react";
@@ -38,14 +40,14 @@ export const getRoleLabel = (role: TenantRole): string => {
   return ROLES_LABEL[role];
 };
 
-export const getHomeTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
+export const getTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
   {
     title: "Dashboard",
     to: "/tenants/$tenantId",
     params: {
       tenantId,
     },
-    icon: HomeIcon,
+    icon: SquareActivityIcon,
   },
   {
     title: "Vehicles",
@@ -97,11 +99,16 @@ export const getHomeTenantNav = (tenantId: Tenant["id"]): RouteItem[] => [
   },
 ];
 
-export const getHomeNonTenantNav = (): RouteItem[] => [
+export const getNonTenantNav = (): RouteItem[] => [
+  {
+    title: "For you",
+    to: "/for-you",
+    icon: CircleUserRoundIcon,
+  },
   {
     title: "Tenants",
     to: "/tenants",
-    icon: HomeIcon,
+    icon: LayersIcon,
   },
   {
     title: "Invitations",
@@ -110,7 +117,7 @@ export const getHomeNonTenantNav = (): RouteItem[] => [
   },
 ];
 
-export const getSettingsTenantNav = (tenantId: Tenant["id"]) => [
+export const getGeneralTenantNav = (tenantId: Tenant["id"]) => [
   {
     label: "Members",
     icon: UsersIcon,
