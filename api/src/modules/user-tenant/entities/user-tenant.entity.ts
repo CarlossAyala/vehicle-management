@@ -34,11 +34,15 @@ export class UserTenant {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.roles)
+  @ManyToOne(() => User, (user) => user.roles, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userId" })
   user: User;
 
-  @ManyToOne(() => Tenant, (tenant) => tenant.roles)
+  @ManyToOne(() => Tenant, (tenant) => tenant.roles, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "tenantId" })
   tenant: Tenant;
 }

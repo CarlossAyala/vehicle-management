@@ -1,5 +1,7 @@
-import type { User } from "../auth/types";
+import type { User } from "../user/types";
 import type { Tenant, TenantRole } from "../tenant/types";
+import type z from "zod";
+import type { acceptInvitationSchema, createInvitationSchema } from "./schemas";
 
 export const InvitationStatus = {
   PENDING: "pending",
@@ -18,7 +20,12 @@ export interface Invitation {
   status: InvitationStatusType;
   authorId: User["id"];
   tenantId: Tenant["id"];
+  expiredAt: string;
   createdAt: string;
   updatedAt: string;
-  expiredAt: string;
+
+  tenant?: Tenant;
 }
+
+export type CreateInvitation = z.infer<typeof createInvitationSchema>;
+export type AcceptInvitation = z.infer<typeof acceptInvitationSchema>;

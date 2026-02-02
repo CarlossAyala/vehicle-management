@@ -3,17 +3,18 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
+  Patch,
   Delete,
 } from "@nestjs/common";
 import { UUIDParamPipe } from "src/common/pipes/uuid-param.pipe";
-import { GetAuth, SkipAuthTenant } from "../auth/auth.decorator";
+import { GetAuth, SkipAuthRoles, SkipAuthTenant } from "../auth/auth.decorator";
+import { User } from "../user/entities/user.entity";
 import { AuthData } from "../auth/auth.interface";
 import { Tenant } from "./entities/tenant.entity";
 import { CreateTenantDto } from "./dto/create-tenant.dto";
-import { UpdateTenantDto } from "./dto/update-tenant.dto";
 import { TenantsService } from "./tenants.service";
+import { UpdateRolesDto } from "./dto/update-roles.dto";
 
 @Controller("tenants")
 export class TenantsController {
@@ -31,6 +32,12 @@ export class TenantsController {
     return this.service.findAll(auth.userId!);
   }
 
+  @SkipAuthRoles()
+  @Get("members")
+  findMembers(@GetAuth() auth: AuthData) {
+    return this.service.findMembers(auth.tenantId!);
+  }
+
   @SkipAuthTenant()
   @Get(":id")
   findOne(
@@ -40,13 +47,20 @@ export class TenantsController {
     return this.service.findOne(auth.userId!, id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateTenantDto: UpdateTenantDto) {
-    return this.service.update(+id, updateTenantDto);
+  @Patch("members/:userId")
+  updateRoles(
+    @GetAuth() auth: AuthData,
+    @Param("userId", UUIDParamPipe) userId: User["id"],
+    @Body() dto: UpdateRolesDto,
+  ) {
+    return this.service.updateRoles(auth.tenantId!, userId, dto);
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.service.remove(+id);
+  @Delete("members/:userId")
+  removeMember(
+    @GetAuth() auth: AuthData,
+    @Param("userId", UUIDParamPipe) userId: User["id"],
+  ) {
+    return this.service.removeMember(auth.tenantId!, userId);
   }
 }
