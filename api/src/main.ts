@@ -1,8 +1,10 @@
 import { NestFactory, Reflector } from "@nestjs/core";
+import { ConfigService } from "@nestjs/config";
 import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 import * as cookieParser from "cookie-parser";
 import { AuthInitMiddleware } from "./common/middleware/auth-init.middleware";
 import { AppModule } from "./app.module";
+import { EnvironmentVariables } from "./config/envs";
 
 async function bootstrap() {
   // TODO: config cors to just our frontend domain
@@ -31,7 +33,9 @@ async function bootstrap() {
 
   app.use(AuthInitMiddleware);
 
-  await app.listen(process.env.PORT ?? 3000);
+  const configService = app.get(ConfigService<EnvironmentVariables>);
+
+  await app.listen(+configService.get("NODE_PORT"));
 }
 
 void bootstrap();

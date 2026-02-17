@@ -101,7 +101,15 @@ function RouteComponent() {
       vehicleId: "",
       transaction: {
         type: "expense",
+        description: "",
       },
+      items: [
+        {
+          amount: 0,
+          description: "",
+          categoryId: "",
+        },
+      ],
       odometer: {
         value: 0,
         description: "",
@@ -171,13 +179,6 @@ function RouteComponent() {
   useEffect(() => {
     form.setValue("vehicleId", vehicleId);
   }, [vehicleId]);
-
-  useEffect(() => {
-    if (items.fields.length === 0) return;
-
-    window.alert("Changing the transaction type will reset the items list.");
-    items.replace([]);
-  }, [type]);
 
   return (
     <Page className="mx-auto w-full max-w-xl">

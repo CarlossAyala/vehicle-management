@@ -1,7 +1,7 @@
 import { queryOptions, skipToken } from "@tanstack/react-query";
 import type { Tenant } from "../tenant/types";
 import type { Operation, OperationType } from "./types";
-import { getAll, getEntity, getOne } from "./api";
+import { getAll, getEntity, getOne, stats } from "./api";
 
 export const operationKeys = {
   key: (tenantId: Tenant["id"]) => {
@@ -26,6 +26,9 @@ export const operationKeys = {
   },
   entity: (tenantId: Tenant["id"], id: Operation["id"]) => {
     return [...operationKeys.detail(tenantId, id), "entity"] as const;
+  },
+  stats: (tenantId: Tenant["id"]) => {
+    return [...operationKeys.key(tenantId), "stats"] as const;
   },
 };
 
@@ -56,5 +59,12 @@ export const operationEntityQuery = (
   return queryOptions({
     queryKey: operationKeys.entity(tenantId, id),
     queryFn: getEntity,
+  });
+};
+
+export const operationStatsQuery = (tenantId: Tenant["id"]) => {
+  return queryOptions({
+    queryKey: operationKeys.stats(tenantId),
+    queryFn: stats,
   });
 };

@@ -91,6 +91,51 @@ export class TransactionService {
     return this.paginationService.paginate(qb, filters);
   }
 
+  async stats(tenantId: Tenant["id"]): Promise<{
+    expense: number;
+    income: number;
+  }> {
+    const now = new Date();
+    // Start: First day of current month at 00:00:00.000
+    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    // End: Last day of current month at 23:59:59.999
+    const end = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    const result = (await this.dataSource.manager
+      .createQueryBuilder(Transaction, "transaction")
+      .innerJoin("transaction.operation", "operation")
+      .innerJoin("transaction.items", "item")
+      .select([
+        "SUM(CASE WHEN operation.type = 'expense' THEN item.amount ELSE 0 END) as expense",
+        "SUM(CASE WHEN operation.type = 'income' THEN item.amount ELSE 0 END) as income",
+      ])
+      .where("operation.tenantId = :tenantId", { tenantId })
+      .andWhere("transaction.createdAt BETWEEN :start AND :end", {
+        start,
+        end,
+      })
+      .getRawOne()) as {
+      expense: string;
+      income: string;
+    };
+
+    const expense = parseFloat(result.expense) || 0;
+    const income = parseFloat(result.income) || 0;
+
+    return {
+      expense,
+      income,
+    };
+  }
+
   async findOne(
     tenantId: Tenant["id"],
     id: Transaction["id"],

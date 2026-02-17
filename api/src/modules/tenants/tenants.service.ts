@@ -8,6 +8,7 @@ import { CreateTenantDto } from "./dto/create-tenant.dto";
 import { UserTenant } from "../user-tenant/entities/user-tenant.entity";
 import { TenantRole } from "../user-tenant/user-tenant.interface";
 import { UpdateRolesDto } from "./dto/update-roles.dto";
+import { UpdateTenantDto } from "./dto/update-tenant.dto";
 
 @Injectable()
 export class TenantsService {
@@ -77,6 +78,19 @@ export class TenantsService {
     }
 
     return this.findByIdOrFail(tenantId);
+  }
+
+  async update(tenantId: Tenant["id"], dto: UpdateTenantDto): Promise<Tenant> {
+    const tenant = await this.findByIdOrFail(tenantId);
+    Object.assign(tenant, dto);
+
+    return this.repository.save(tenant);
+  }
+
+  async remove(tenantId: Tenant["id"]): Promise<void> {
+    const tenant = await this.findByIdOrFail(tenantId);
+
+    await this.repository.remove(tenant);
   }
 
   async findMembers(tenantId: Tenant["id"]): Promise<User[]> {

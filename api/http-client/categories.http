@@ -14,7 +14,7 @@ X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
 # @name GET_ALL
 
 GET {{API_URL}}/categories
-X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+X-Tenant-Id: fb27406e-7e83-4915-9b56-113312a45122
 
 ###
 # @name GET_ONE

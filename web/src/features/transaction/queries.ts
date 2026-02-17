@@ -4,10 +4,10 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import type { Tenant } from "../tenant/types";
-import type { Transaction } from "./types";
-import { create, getAll, getOne, remove, update } from "./api";
 import { operationKeys } from "../operation/queries";
 import { odometerKeys } from "../odometer/queries";
+import type { Transaction } from "./types";
+import { create, getAll, getOne, remove, stats, update } from "./api";
 
 export const transactionKeys = {
   key: (tenantId: Tenant["id"]) => {
@@ -25,6 +25,9 @@ export const transactionKeys = {
   detail: (tenantId: Tenant["id"], id: Transaction["id"]) => {
     return [...transactionKeys.details(tenantId), id] as const;
   },
+  stats: (tenantId: Tenant["id"]) => {
+    return [...transactionKeys.key(tenantId), "stats"] as const;
+  },
 };
 
 export const transactionsQuery = (tenantId: Tenant["id"], filters = {}) => {
@@ -41,6 +44,13 @@ export const transactionQuery = (
   return queryOptions({
     queryKey: transactionKeys.detail(tenantId, id),
     queryFn: getOne,
+  });
+};
+
+export const transactionStatsQuery = (tenantId: Tenant["id"]) => {
+  return queryOptions({
+    queryKey: transactionKeys.stats(tenantId),
+    queryFn: stats,
   });
 };
 

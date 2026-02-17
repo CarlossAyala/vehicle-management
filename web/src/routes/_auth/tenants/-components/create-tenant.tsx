@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useCreateTenant } from "@/features/tenant/queries";
 import { createTenantSchema } from "@/features/tenant/schemas";
-import type { CreateTenantDto } from "@/features/tenant/types";
 import { TenantTypeValues } from "@/features/tenant/utils";
 import { Button } from "@/ui/button";
 import {
@@ -31,11 +30,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/ui/dialog";
+import type { ICreateTenant } from "@/features/tenant/types";
 
 export const CreateTenant = () => {
   const navigate = useNavigate();
 
-  const form = useForm<CreateTenantDto>({
+  const form = useForm<ICreateTenant>({
     resolver: zodResolver(createTenantSchema),
     defaultValues: {
       name: "",
@@ -47,7 +47,7 @@ export const CreateTenant = () => {
 
   const { mutate, isPending } = useCreateTenant();
 
-  const onSubmit = (values: CreateTenantDto) => {
+  const onSubmit = (values: ICreateTenant) => {
     mutate(values, {
       onSuccess: ({ tenant }) => {
         toast.success("Tenant created successfully");

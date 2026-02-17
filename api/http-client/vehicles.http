@@ -2,7 +2,7 @@
 
 POST {{API_URL}}/vehicles
 Content-Type: application/json
-X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+X-Tenant-Id: fb27406e-7e83-4915-9b56-113312a45122
 
 {
 	"nickname": "XXX",
@@ -19,7 +19,7 @@ X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
 # @name GetAll
 
 GET {{API_URL}}/vehicles
-X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+X-Tenant-Id: fb27406e-7e83-4915-9b56-113312a45122
 
 ###
 

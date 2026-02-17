@@ -7,7 +7,7 @@ import type { Tenant } from "../tenant/types";
 import { operationKeys } from "../operation/queries";
 import { odometerKeys } from "../odometer/queries";
 import type { Fuel, FuelFilters } from "./types";
-import { create, getAll, getOne, remove, update } from "./api";
+import { create, getAll, getOne, remove, stats, update } from "./api";
 
 export const fuelKeys = {
   key: (tenantId: Tenant["id"]) => {
@@ -25,12 +25,22 @@ export const fuelKeys = {
   detail: (tenantId: Tenant["id"], id: Fuel["id"]) => {
     return [...fuelKeys.details(tenantId), id] as const;
   },
+  stats: (tenantId: Tenant["id"]) => {
+    return [...fuelKeys.key(tenantId), "stats"] as const;
+  },
 };
 
 export const fuelsQuery = (tenantId: Tenant["id"], filters: FuelFilters) => {
   return queryOptions({
     queryKey: fuelKeys.list(tenantId, filters),
     queryFn: getAll,
+  });
+};
+
+export const fuelStatsQuery = (tenantId: Tenant["id"]) => {
+  return queryOptions({
+    queryKey: fuelKeys.stats(tenantId),
+    queryFn: stats,
   });
 };
 

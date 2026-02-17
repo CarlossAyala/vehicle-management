@@ -1,11 +1,17 @@
 import { API_URL, AUTH_HEADER_TENANT_ID_NAME } from "@/lib/utils";
-import type { CreateTenantDto, Tenant, UpdateRoles, UserTenant } from "./types";
+import type {
+  ICreateTenant,
+  Tenant,
+  UpdateRoles,
+  UpdateTenant,
+  UserTenant,
+} from "./types";
 import type { User } from "../user/types";
 import type { QueryFunctionContext } from "@tanstack/react-query";
 import type { tenantKeys } from "./queries";
 
 export const create = async (
-  values: CreateTenantDto,
+  values: ICreateTenant,
 ): Promise<{
   tenant: Tenant;
   userTenant: UserTenant;
@@ -36,8 +42,14 @@ export const getAll = async (): Promise<Tenant[]> => {
   return res.json();
 };
 
-export const getOne = async (id: Tenant["id"]): Promise<Tenant> => {
-  const res = await fetch(`${API_URL}/tenants/${id}`, {
+export const getOne = async ({
+  queryKey,
+}: QueryFunctionContext<
+  ReturnType<(typeof tenantKeys)["detail"]>
+>): Promise<Tenant> => {
+  const [, { tenantId }] = queryKey;
+
+  const res = await fetch(`${API_URL}/tenants/${tenantId}`, {
     credentials: "include",
   });
   if (!res.ok) {
@@ -45,6 +57,47 @@ export const getOne = async (id: Tenant["id"]): Promise<Tenant> => {
   }
 
   return res.json();
+};
+
+export const update = async ({
+  tenantId,
+  values,
+}: {
+  tenantId: Tenant["id"];
+  values: UpdateTenant;
+}): Promise<Tenant> => {
+  const res = await fetch(`${API_URL}/tenants`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
+    },
+    body: JSON.stringify(values),
+  });
+  if (!res.ok) {
+    throw new Error("Failed to update tenant");
+  }
+
+  return res.json();
+};
+
+export const remove = async ({
+  tenantId,
+}: {
+  tenantId: Tenant["id"];
+}): Promise<void> => {
+  const res = await fetch(`${API_URL}/tenants`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to delete tenant");
+  }
 };
 
 export const getMembers = async ({

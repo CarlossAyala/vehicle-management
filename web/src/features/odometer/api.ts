@@ -57,6 +57,27 @@ export const getAll = async ({
   return res.json();
 };
 
+export const stats = async ({
+  queryKey,
+}: QueryFunctionContext<ReturnType<(typeof odometerKeys)["stats"]>>): Promise<{
+  total: number;
+}> => {
+  const [, { tenantId }] = queryKey;
+
+  const res = await fetch(`${API_URL}/odometers/stats`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch odometer stats");
+  }
+
+  return res.json();
+};
+
 export const getByOperationId = async ({
   queryKey: [, { tenantId }, , , operationId],
 }: QueryFunctionContext<

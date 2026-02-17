@@ -6,6 +6,9 @@ import {
   Param,
   Patch,
   Delete,
+  Put,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import { UUIDParamPipe } from "src/common/pipes/uuid-param.pipe";
 import { GetAuth, SkipAuthRoles, SkipAuthTenant } from "../auth/auth.decorator";
@@ -13,8 +16,9 @@ import { User } from "../user/entities/user.entity";
 import { AuthData } from "../auth/auth.interface";
 import { Tenant } from "./entities/tenant.entity";
 import { CreateTenantDto } from "./dto/create-tenant.dto";
-import { TenantsService } from "./tenants.service";
 import { UpdateRolesDto } from "./dto/update-roles.dto";
+import { UpdateTenantDto } from "./dto/update-tenant.dto";
+import { TenantsService } from "./tenants.service";
 
 @Controller("tenants")
 export class TenantsController {
@@ -30,6 +34,17 @@ export class TenantsController {
   @Get()
   findAll(@GetAuth() auth: AuthData) {
     return this.service.findAll(auth.userId!);
+  }
+
+  @Put()
+  update(@GetAuth() auth: AuthData, @Body() dto: UpdateTenantDto) {
+    return this.service.update(auth.tenantId!, dto);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete()
+  async remove(@GetAuth() auth: AuthData) {
+    await this.service.remove(auth.tenantId!);
   }
 
   @SkipAuthRoles()

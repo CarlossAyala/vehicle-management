@@ -70,6 +70,28 @@ export const getAll = async ({
   return res.json();
 };
 
+export const stats = async ({
+  queryKey,
+}: QueryFunctionContext<ReturnType<(typeof serviceKeys)["stats"]>>): Promise<{
+  count: number;
+  total: number;
+}> => {
+  const [, { tenantId }] = queryKey;
+
+  const res = await fetch(`${API_URL}/services/stats`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch services stats");
+  }
+
+  return res.json();
+};
+
 export const getOne = async ({
   queryKey: [, { tenantId }, , id],
 }: QueryFunctionContext<ReturnType<(typeof serviceKeys)["detail"]>>): Promise<

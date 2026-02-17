@@ -1,6 +1,7 @@
 import { APP_GUARD } from "@nestjs/core";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UserModule } from "./modules/user/user.module";
 import { TenantsModule } from "./modules/tenants/tenants.module";
 import { UserTenantModule } from "./modules/user-tenant/user-tenant.module";
@@ -13,26 +14,39 @@ import { CategoryModule } from "./modules/category/category.module";
 import { OdometerModule } from "./modules/odometer/odometer.module";
 import { ServiceModule } from "./modules/service/service.module";
 import { TransactionModule } from "./modules/transaction/transaction.module";
-import { PermissionsGuard } from "./common/permissions/permissions.guard";
+import { InvitationModule } from "./modules/invitation/invitation.module";
+// import { PermissionsGuard } from "./common/permissions/permissions.guard";
 import { FuelModule } from "./modules/fuel/fuel.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { InvitationModule } from "./modules/invitation/invitation.module";
+import { EnvironmentVariables, validate, validateNodeEnv } from "./config/envs";
+
+const env = validateNodeEnv();
 
 @Module({
   imports: [
-    // TODO: Move those to .env
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: "localhost",
-      port: 5432,
-      username: "carlos_ayala",
-      password: "f1f86524b1f7a7869c6b1a19d1a15afd",
-      database: "vehicle_management",
-      entities: [],
-      autoLoadEntities: true,
-      // TODO: set to false in production
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      envFilePath: `.env.${env}`,
+      validate,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (service: ConfigService<EnvironmentVariables>) => {
+        return {
+          type: "postgres",
+          host: service.get("DATABASE_HOST"),
+          port: +service.get("DATABASE_PORT"),
+          username: service.get("DATABASE_USERNAME"),
+          password: service.get("DATABASE_PASSWORD"),
+          database: service.get("DATABASE_NAME"),
+          entities: [],
+          autoLoadEntities: true,
+          synchronize: false,
+        };
+      },
     }),
     UserModule,
     TenantsModule,
@@ -55,10 +69,10 @@ import { InvitationModule } from "./modules/invitation/invitation.module";
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    {
-      provide: APP_GUARD,
-      useClass: PermissionsGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: PermissionsGuard,
+    // },
   ],
 })
 export class AppModule {}

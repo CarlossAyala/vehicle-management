@@ -13,6 +13,7 @@ import {
   getByOperationId,
   getOne,
   remove,
+  stats,
   update,
 } from "./api";
 
@@ -39,6 +40,9 @@ export const odometerKeys = {
       operationId,
     ] as const;
   },
+  stats: (tenantId: Tenant["id"]) => {
+    return [...odometerKeys.key(tenantId), "stats"] as const;
+  },
 };
 
 export const odometersQuery = (
@@ -55,6 +59,13 @@ export const odometerQuery = (tenantId: Tenant["id"], id: Odometer["id"]) => {
   return queryOptions({
     queryKey: odometerKeys.detail(tenantId, id),
     queryFn: getOne,
+  });
+};
+
+export const odometerStatsQuery = (tenantId: Tenant["id"]) => {
+  return queryOptions({
+    queryKey: odometerKeys.stats(tenantId),
+    queryFn: stats,
   });
 };
 

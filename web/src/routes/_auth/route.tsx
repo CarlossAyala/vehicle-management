@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { profileQuery } from "@/features/auth/queries";
 import { queryClient } from "@/lib/utils";
-import { SidebarInset, SidebarProvider } from "@/ui/sidebar";
+import { SidebarProvider } from "@/ui/sidebar";
 import { AppSidebar } from "./-components/app-sidebar";
 import { AppHeader } from "./-components/app-header";
 
@@ -23,12 +23,14 @@ export const Route = createFileRoute("/_auth")({
 
 function RouteComponent() {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <AppHeader />
-        <Outlet />
-      </SidebarInset>
-    </SidebarProvider>
+    <div className="flex min-h-dvh w-full">
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="flex flex-1 flex-col">
+          <AppHeader />
+          <Outlet />
+        </div>
+      </SidebarProvider>
+    </div>
   );
 }

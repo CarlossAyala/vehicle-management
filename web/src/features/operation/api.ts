@@ -31,6 +31,27 @@ export const getAll = async ({
   return res.json();
 };
 
+export const stats = async ({
+  queryKey,
+}: QueryFunctionContext<ReturnType<(typeof operationKeys)["stats"]>>): Promise<{
+  count: number;
+}> => {
+  const [, { tenantId }] = queryKey;
+
+  const res = await fetch(`${API_URL}/operations/stats`, {
+    credentials: "include",
+    headers: {
+      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch operations stats");
+  }
+
+  return res.json();
+};
+
 export const getOne = async ({
   queryKey,
 }: QueryFunctionContext<

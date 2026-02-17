@@ -10,6 +10,11 @@ export const createTenantSchema = z.object({
   type,
 });
 
+export const updateTenantSchema = z.object({
+  name,
+  description,
+});
+
 export const updateRolesSchema = z.object({
   roles: z.array(z.string()).min(1, "At least one role is required"),
 });

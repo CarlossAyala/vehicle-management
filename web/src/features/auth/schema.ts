@@ -24,6 +24,7 @@ export const loginSchema = z.object({
   password,
 });
 
+// TODO: this should be typed as tanstack routes
 export const loginSearchSchema = z.object({
-  redirect: z.string().default("/tenants").catch("/tenants"),
+  redirect: z.string().default("/for-you").catch("/for-you"),
 });

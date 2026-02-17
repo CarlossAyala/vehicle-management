@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DataSource, EntityManager, Repository } from "typeorm";
+import { Between, DataSource, EntityManager, Repository } from "typeorm";
 import { PaginationService } from "src/common/pagination/pagination.service";
 import { Pagination } from "src/common/pagination/pagination.interface";
 import { User } from "../user/entities/user.entity";
@@ -99,6 +99,32 @@ export class OperationService {
       .orderBy(alias + "." + filters.sort, filters.order);
 
     return this.paginationService.paginate(qb, filters);
+  }
+
+  // TODO: remove this
+  async stats(tenantId: Tenant["id"]): Promise<{ count: number }> {
+    const now = new Date();
+    // Start: First day of current month at 00:00:00.000
+    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    // End: Last day of current month at 23:59:59.999
+    const end = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    const count = await this.repository.count({
+      where: {
+        tenantId,
+        createdAt: Between(start, end),
+      },
+    });
+
+    return { count };
   }
 
   async findOne(

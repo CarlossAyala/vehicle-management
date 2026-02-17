@@ -2,17 +2,14 @@
 
 POST {{API_URL}}/fuel
 Content-Type: application/json
-X-Tenant-Id: 72abff1b-4dae-479f-badd-677908051f5b
+X-Tenant-Id: fb27406e-7e83-4915-9b56-113312a45122
 
 {
-	"vehicleId": "f0a247ce-1a56-4f87-b351-0eaed11d794f",
+	"vehicleId": "7665d82a-ec75-4cb0-a284-b4f106882b30",
 	"fuel": {
-		"quantity": 10,
-		"amount": 6500,
-		"categoryId": "0c755cb6-808e-4c14-9e41-bb311adda3e2"
-	},
-	"odometer": {
-		"value": 20
+		"quantity": 123,
+		"amount": 1500,
+		"categoryId": "26dd28ff-c896-43fc-be79-80a28665629e"
 	}
 }
 
@@ -20,13 +17,19 @@ X-Tenant-Id: 72abff1b-4dae-479f-badd-677908051f5b
 # @name GET_ALL
 
 GET {{API_URL}}/fuel?limit=10&order=ASC&page=1&sort=createdAt
-X-Tenant-Id: 7493a5a4-d4e3-4198-bc2f-22881febb49a
+X-Tenant-Id: fb27406e-7e83-4915-9b56-113312a45122
 
 ###
 # @name GET_ONE
 
 GET {{API_URL}}/fuel/9aba982c-9733-48ce-ae02-3687cbe7b28a
 X-Tenant-Id: a20daa53-411d-4008-8bd7-feac639ce916
+
+###
+# @name GET_STATS
+
+GET {{API_URL}}/fuel/stats
+X-Tenant-Id: fb27406e-7e83-4915-9b56-113312a45122
 
 ####
 # @name UPDATE

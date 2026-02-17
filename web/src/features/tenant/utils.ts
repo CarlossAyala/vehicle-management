@@ -7,6 +7,7 @@ import {
   ListTreeIcon,
   MailIcon,
   NavigationIcon,
+  SettingsIcon,
   SquareActivityIcon,
   UsersIcon,
   WrenchIcon,
@@ -117,7 +118,17 @@ export const getNonTenantNav = (): RouteItem[] => [
   },
 ];
 
-export const getGeneralTenantNav = (tenantId: Tenant["id"]) => [
+export const getSettingsTenantNav = (tenantId: Tenant["id"]) => [
+  {
+    label: "General",
+    icon: SettingsIcon,
+    link: linkOptions({
+      to: "/tenants/$tenantId/settings",
+      params: {
+        tenantId,
+      },
+    }),
+  },
   {
     label: "Members",
     icon: UsersIcon,

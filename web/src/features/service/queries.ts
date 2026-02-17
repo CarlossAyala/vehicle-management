@@ -7,7 +7,7 @@ import type { Tenant } from "../tenant/types";
 import { operationKeys } from "../operation/queries";
 import { odometerKeys } from "../odometer/queries";
 import type { Service } from "./types";
-import { create, getAll, getOne, remove, update } from "./api";
+import { create, getAll, getOne, remove, stats, update } from "./api";
 
 // TODO: add filters
 export const serviceKeys = {
@@ -26,6 +26,9 @@ export const serviceKeys = {
   detail: (tenantId: Tenant["id"], id: Service["id"]) => {
     return [...serviceKeys.details(tenantId), id] as const;
   },
+  stats: (tenantId: Tenant["id"]) => {
+    return [...serviceKeys.key(tenantId), "stats"] as const;
+  },
 };
 
 export const servicesQuery = (tenantId: Tenant["id"], filters = {}) => {
@@ -39,6 +42,13 @@ export const serviceQuery = (tenantId: Tenant["id"], id: Service["id"]) => {
   return queryOptions({
     queryKey: serviceKeys.detail(tenantId, id),
     queryFn: getOne,
+  });
+};
+
+export const serviceStatsQuery = (tenantId: Tenant["id"]) => {
+  return queryOptions({
+    queryKey: serviceKeys.stats(tenantId),
+    queryFn: stats,
   });
 };
 

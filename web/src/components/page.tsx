@@ -3,9 +3,8 @@ import type { ComponentProps } from "react";
 
 function Page({ className, ...props }: ComponentProps<"div">) {
   return (
-    <div
-      data-slot="page"
-      className={cn("flex flex-1 flex-col gap-y-6 pb-10", className)}
+    <main
+      className={cn("mx-auto size-full flex-1 px-2 py-6", className)}
       {...props}
     />
   );

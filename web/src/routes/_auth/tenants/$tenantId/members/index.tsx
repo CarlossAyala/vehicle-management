@@ -1,4 +1,4 @@
-import React, { Children, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
@@ -401,7 +401,7 @@ const EditRoles = ({
                       data-invalid={fieldState.invalid}
                     >
                       <Checkbox
-                        id={`checkbox-${r.role}`}
+                        id={r.role}
                         name={field.name}
                         aria-invalid={fieldState.invalid}
                         checked={field.value.includes(r.role)}
@@ -412,10 +412,7 @@ const EditRoles = ({
                           field.onChange(newValue);
                         }}
                       />
-                      <FieldLabel
-                        htmlFor={`checkbox-${r.role}`}
-                        className="font-normal"
-                      >
+                      <FieldLabel htmlFor={r.role} className="font-normal">
                         {r.name}
                       </FieldLabel>
                     </Field>
@@ -431,9 +428,13 @@ const EditRoles = ({
 
         <DialogFooter className="mt-4">
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="ghost">Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="form-update-roles" disabled={isPending}>
+          <Button
+            type="submit"
+            form="form-update-roles"
+            disabled={isPending || !form.formState.isDirty}
+          >
             {isPending ? "Saving..." : "Save"}
           </Button>
         </DialogFooter>

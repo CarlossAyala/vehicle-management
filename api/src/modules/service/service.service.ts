@@ -87,6 +87,47 @@ export class ServiceService {
     return this.paginationService.paginate(qb, filters);
   }
 
+  async stats(
+    tenantId: Tenant["id"],
+  ): Promise<{ count: number; total: number }> {
+    const now = new Date();
+    // Start: First day of current month at 00:00:00.000
+    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    // End: Last day of current month at 23:59:59.999
+    const end = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    const result = (await this.dataSource.manager
+      .createQueryBuilder(Service, "service")
+      .innerJoin("service.operation", "operation")
+      .innerJoin("service.items", "items")
+      .select(["COUNT(service.id) as count", "SUM(items.amount) as total"])
+      .where("operation.tenantId = :tenantId", { tenantId })
+      .andWhere("operation.type = :type", {
+        type: OperationType.SERVICE,
+      })
+      .andWhere("service.createdAt BETWEEN :start AND :end", {
+        start,
+        end,
+      })
+      .getRawOne()) as {
+      count: string;
+      total: string;
+    };
+
+    return {
+      count: parseInt(result.count, 10) || 0,
+      total: parseFloat(result.total) || 0,
+    };
+  }
+
   async findOne(
     tenantId: Tenant["id"],
     id: Service["id"],

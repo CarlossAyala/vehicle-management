@@ -80,6 +80,54 @@ export class FuelService {
     return fuel;
   }
 
+  async stats(tenantId: Tenant["id"]): Promise<{
+    count: number;
+    quantity: number;
+    amount: number;
+  }> {
+    const now = new Date();
+    // Start: First day of current month at 00:00:00.000
+    const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+    // End: Last day of current month at 23:59:59.999
+    const end = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    const result = (await this.dataSource.manager
+      .createQueryBuilder(Fuel, "fuel")
+      .leftJoin("fuel.operation", "operation")
+      .select([
+        "COUNT(fuel.id) as count",
+        "SUM(fuel.quantity) as quantity",
+        "SUM(fuel.amount) as amount",
+      ])
+      .where("operation.tenantId = :tenantId", { tenantId })
+      .andWhere("operation.type = :type", {
+        type: OperationType.FUEL,
+      })
+      .andWhere("fuel.createdAt BETWEEN :start AND :end", {
+        start,
+        end,
+      })
+      .getRawOne()) as {
+      count: string;
+      quantity: string;
+      amount: string;
+    };
+
+    return {
+      count: parseInt(result.count, 10) || 0,
+      quantity: parseFloat(result.quantity) || 0,
+      amount: parseFloat(result.amount) || 0,
+    };
+  }
+
   async update(
     tenantId: Tenant["id"],
     id: Fuel["id"],

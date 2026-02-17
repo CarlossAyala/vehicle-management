@@ -1,6 +1,10 @@
 import type z from "zod";
 import type { User } from "../user/types";
-import type { createTenantSchema, updateRolesSchema } from "./schemas";
+import type {
+  createTenantSchema,
+  updateRolesSchema,
+  updateTenantSchema,
+} from "./schemas";
 
 export const TenantRoles = {
   OWNER: "owner",
@@ -37,5 +41,6 @@ export interface UserTenant {
   updatedAt: string;
 }
 
-export type CreateTenantDto = z.infer<typeof createTenantSchema>;
+export type ICreateTenant = z.infer<typeof createTenantSchema>;
+export type UpdateTenant = z.infer<typeof updateTenantSchema>;
 export type UpdateRoles = z.infer<typeof updateRolesSchema>;

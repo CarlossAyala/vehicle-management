@@ -34,6 +34,11 @@ export class ServiceController {
     return this.service.findAll(auth.tenantId!, filters);
   }
 
+  @Get("stats")
+  stats(@GetAuth() auth: AuthData) {
+    return this.service.stats(auth.tenantId!);
+  }
+
   @Permissions("SERVICE", "READ")
   @Get(":id")
   findOne(

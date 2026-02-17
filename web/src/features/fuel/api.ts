@@ -77,6 +77,31 @@ export const getOne = async ({
   return res.json();
 };
 
+export const stats = async ({
+  queryKey,
+}: QueryFunctionContext<ReturnType<(typeof fuelKeys)["stats"]>>): Promise<{
+  count: number;
+  quantity: number;
+  amount: number;
+}> => {
+  const [, { tenantId }] = queryKey;
+  const url = `${API_URL}/fuel/stats`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      [AUTH_HEADER_TENANT_ID_NAME]: tenantId,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch fuel stats");
+  }
+
+  return res.json();
+};
+
 export const update = async ({
   tenantId,
   id,

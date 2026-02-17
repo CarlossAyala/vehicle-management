@@ -40,6 +40,11 @@ export class FuelController {
     return this.service.findAll(auth.tenantId!, filters);
   }
 
+  @Get("stats")
+  stat(@GetAuth() auth: AuthData) {
+    return this.service.stats(auth.tenantId!);
+  }
+
   @Permissions("FUEL", "READ")
   @Get(":id")
   findOne(

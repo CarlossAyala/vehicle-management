@@ -37,7 +37,7 @@ export class Tenant {
   updatedAt: Date;
 
   @OneToMany(() => UserTenant, (userTenant) => userTenant.tenant)
-  roles: UserTenant[];
+  roles?: UserTenant[];
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.tenant)
   vehicles: Vehicle[];

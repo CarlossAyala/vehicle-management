@@ -4,7 +4,7 @@ import { Webhook } from "lucide-react";
 import {
   getNonTenantNav,
   getTenantNav,
-  getGeneralTenantNav,
+  getSettingsTenantNav,
 } from "@/features/tenant/utils";
 import {
   Sidebar,
@@ -27,8 +27,8 @@ export const AppSidebar = () => {
     return tenantId ? getTenantNav(tenantId) : getNonTenantNav();
   }, [tenantId]);
 
-  const general = useMemo(() => {
-    return tenantId ? getGeneralTenantNav(tenantId) : [];
+  const settings = useMemo(() => {
+    return tenantId ? getSettingsTenantNav(tenantId) : [];
   }, [tenantId]);
 
   return (
@@ -76,10 +76,10 @@ export const AppSidebar = () => {
 
         {tenantId ? (
           <SidebarGroup>
-            <SidebarGroupLabel>General</SidebarGroupLabel>
+            <SidebarGroupLabel>Settings</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {general.map((item) => (
+                {settings.map((item) => (
                   <SidebarMenuItem key={item.label}>
                     <SidebarMenuButton asChild tooltip={item.label}>
                       <Link {...item.link}>

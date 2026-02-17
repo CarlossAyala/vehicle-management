@@ -44,5 +44,5 @@ export class UserTenant {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "tenantId" })
-  tenant: Tenant;
+  tenant?: Tenant;
 }

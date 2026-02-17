@@ -1,6 +1,8 @@
-import { pbkdf2Sync } from "node:crypto";
 import { DataSource } from "typeorm";
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import * as bcrypt from "bcrypt";
+import { EnvironmentVariables } from "src/config/envs";
 import { User } from "../user/entities/user.entity";
 import { UserService } from "../user/user.service";
 import { UserTenant } from "../user-tenant/entities/user-tenant.entity";
@@ -16,6 +18,7 @@ export class AuthService {
     private readonly sessionService: SessionsService,
     private readonly userTenantService: UserTenantService,
     private readonly dataSource: DataSource,
+    private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
   async register(dto: RegisterDto): Promise<User> {
@@ -27,7 +30,7 @@ export class AuthService {
     }
 
     return this.dataSource.transaction(async (manager) => {
-      const hash = this.generateHash(password);
+      const hash = await this.generateHash(password);
 
       const _user = manager.create(User, {
         email,
@@ -50,7 +53,7 @@ export class AuthService {
       throw new BadRequestException("Invalid credentials");
     }
 
-    const isPasswordValid = this.compareHash(password, user.password);
+    const isPasswordValid = await this.compareHash(password, user.password);
     if (!isPasswordValid) {
       throw new BadRequestException("Invalid credentials");
     }
@@ -74,19 +77,13 @@ export class AuthService {
     return this.userTenantService.findAllByUserId(userId);
   }
 
-  private generateHash(password: string): string {
-    // TODO: Move this to the .env
-    const SALT = "b37a702f1abf9baf6cc38920fb753f78";
-    const ITERATIONS = 1_000;
-    const KEY_LENGTH = 512;
-    const DIGEST = "sha512";
+  private generateHash(password: string): Promise<string> {
+    const SALT = +this.configService.getOrThrow("BCRYPT_SALT_ROUNDS");
 
-    return pbkdf2Sync(password, SALT, ITERATIONS, KEY_LENGTH, DIGEST).toString(
-      "hex",
-    );
+    return bcrypt.hash(password, SALT);
   }
 
-  private compareHash(password: string, hash: string): boolean {
-    return this.generateHash(password) === hash;
+  private compareHash(password: string, hashValue: string): Promise<boolean> {
+    return bcrypt.compare(password, hashValue);
   }
 }

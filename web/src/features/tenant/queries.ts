@@ -1,5 +1,6 @@
 import {
   queryOptions,
+  skipToken,
   useMutation,
   useQueryClient,
   useSuspenseQuery,
@@ -14,6 +15,8 @@ import {
   getMembers,
   updateRoles,
   removeMember,
+  update,
+  remove,
 } from "./api";
 import { profileQuery } from "../auth/queries";
 import { useNavigate } from "@tanstack/react-router";
@@ -30,8 +33,8 @@ export const tenantKeys = {
     return ["tenants", { tenantId }] as const;
   },
   list: () => [...tenantKeys.key(), "list"] as const,
-  detail: (id: Tenant["id"]) => {
-    return [...tenantKeys.key(), "detail", id] as const;
+  detail: (id?: Tenant["id"]) => {
+    return [...tenantKeys.key(id), "detail"] as const;
   },
   members: (tenantId: Tenant["id"]) => {
     return [...tenantKeys.key(tenantId), "members"] as const;
@@ -53,10 +56,24 @@ export const membersQuery = (tenantId: Tenant["id"]) => {
   });
 };
 
-export const tenantQuery = (id: Tenant["id"]) => {
+export const tenantSuspenseQuery = (tenantId: Tenant["id"]) => {
+  return queryOptions({
+    queryKey: tenantKeys.detail(tenantId),
+    queryFn: getOne,
+  });
+};
+
+export const tenantQuery = (id?: Tenant["id"]) => {
+  if (!id) {
+    return queryOptions({
+      queryKey: tenantKeys.detail(id),
+      queryFn: id ? getOne : skipToken,
+    });
+  }
+
   return queryOptions({
     queryKey: tenantKeys.detail(id),
-    queryFn: () => getOne(id),
+    queryFn: getOne,
   });
 };
 
@@ -92,6 +109,36 @@ export const useCreateTenant = () => {
       query.setQueryData(userTenantsQuery.queryKey, (previous = []) => {
         return [...previous, userTenant];
       });
+    },
+  });
+};
+
+export const useUpdateTenant = () => {
+  const query = useQueryClient();
+
+  return useMutation({
+    mutationFn: update,
+    onSuccess: (tenant) => {
+      query.setQueryData(tenantQuery(tenant.id).queryKey, tenant);
+
+      return query.invalidateQueries({ queryKey: tenantKeys.list() });
+    },
+  });
+};
+
+export const useRemoveTenant = () => {
+  const query = useQueryClient();
+
+  return useMutation({
+    mutationFn: remove,
+    onSuccess: (_, { tenantId }) => {
+      query.removeQueries({ queryKey: tenantKeys.key(tenantId) });
+
+      /**
+       * #TODO: we should remove the others features cache too, like,
+       * categories, fuel, etc
+       */
+      return query.invalidateQueries({ queryKey: tenantKeys.list() });
     },
   });
 };
